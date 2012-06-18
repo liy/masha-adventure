@@ -2,20 +2,41 @@
 <head>
     <meta charset="utf-8">
     <title></title>
+	<style type="text/css">
+		#mashaAdventureCanvas {
+			border-style:solid;
+			border-color:#000;
+			width: 800px;
+		}
+	</style>
+
+
 	<script src="http://code.createjs.com/easeljs-0.4.2.min.js"></script>
 	<!-- <script src="http://code.createjs.com/movieclip-0.4.1.min.js"></script> -->
 	<script src="libs/greensock/TweenLite.js"></script>
 	<script src="../accessibility/Scan.js"></script>
 	<script src="../accessibility/Switches.js"></script>
-	<script src="src/views/GameView.js"></script>
+	
 	<script src="src/views/View.js"></script>
+	<script src="src/views/GameView.js"></script>
+	<script src="src/views/RewardView.js"></script>
+	<script src="src/views/SplashView.js"></script>
+	<script src="src/views/TitleView.js"></script>
+	
+	<script src="src/controllers/Controller.js"></script>
+	<script src="src/controllers/GameController.js"></script>
+	<script src="src/controllers/RewardController.js"></script>
+	<script src="src/controllers/SplashController.js"></script>
+	<script src="src/controllers/TitleController.js"></script>
+	
 	<script src="src/ui/SimpleButton.js"></script>
 	
 	
-	<script src="main.js"></script>
-
+	<script src="src/MashaAdventure.js"></script>
 </head>
 <body>
-	<canvas width='800' height='600' id='canvas'>
+	<div id="rootDiv">
+		<canvas width='800' height='600' id='mashaAdventureCanvas'>
+	</div>
 </body>
 </html>

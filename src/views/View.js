@@ -1,18 +1,17 @@
 (function(window){
-	
 	// constructor
 	function View(){
-		this.alpha = 0;
+		// initialize container.
+		this.initialize();
+		
+		// initialize view.
+		this.init();
 	};
 	// extends MovieClip
-	var p = View.prototype = new Container();
+	var p = View.prototype = new Container;
 	
-	p.fadeOut = function(){
-		TweenLite.to(this, 0.5, {alpha:0});
-	};
-	
-	p.fadeIn = function(){
-		TweenLite.to(this, 1, {alpha:1});
+	p.init = function(){
+		this.alpha = 0;
 	}
 	
 	// make it available globally.
