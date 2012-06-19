@@ -15,7 +15,14 @@
 			this.view.resize(adventure.stage.canvas.width, adventure.stage.canvas.height);
 			
 			TweenLite.to(this.view, 1, {alpha:1, onComplete:completeFunc});
+			
+			switches.addListener("switch press", switchDownHandler);
 		}
+		
+		function switchDownHandler(e){
+			switches.removeListener("switch press", switchDownHandler)
+			self.fadeOut(adventure.goGame);
+		};
 	};
 	TitleController.prototype = new Controller;
 	
