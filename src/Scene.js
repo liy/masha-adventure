@@ -3,8 +3,7 @@
 		this.initialize();
 		this.name = "scene";
 		
-		document.addEventListener("keydown", bind(this, keyDownHandler), false);
-		// document.addEventListener("keydown", keyDownHandler.bind(this), false);
+		gameInput.addListener("keydown", bind(this, keyDownHandler));
 	}
 	var p = Scene.prototype = new Container;
 	
@@ -18,15 +17,34 @@
 	}
 	
 	p.update = function(){
-		this.player.x = 100;
-		this.player.y = 100;
+		this.player.x += this.player.velocity.x;
+		this.player.y += this.player.velocity.y;
+		
+		if(this.player.x + this.player.bitmap.image.width < 0){
+			this.player.x = adventure.stage.canvas.width;
+		}
+		else if(this.player.x > adventure.stage.canvas.width){
+			this.player.x = -this.player.bitmap.image.width;
+		}
+		
+		if(this.player.y + this.player.bitmap.image.height < 0){
+			this.player.y = adventure.stage.canvas.height;
+		}
+		else if(this.player.y > adventure.stage.canvas.height){
+			this.player.y = -this.player.bitmap.image.height;
+		}
 	}
 	
 	function keyDownHandler(e){
 		if(e.keyCode == 37)
-			this.player.x -= 20;
-		else(e.keyCode == 39)
-			this.player.x += 20;
+			this.player.velocity.x -= 1;
+		else if(e.keyCode == 39)
+			this.player.velocity.x += 1;
+		
+		if(e.keyCode == 38)
+			this.player.velocity.y -= 1;
+		else if(e.keyCode == 40)
+			this.player.velocity.y += 1;
 	}
 	
 	window.Scene = Scene;
