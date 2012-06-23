@@ -127,6 +127,10 @@
 	p.isZero = function(){
 		return this.x == 0 && this.y == 0;
 	}
+	
+	p.zero = function(){
+		this.x = this.y = 0;
+	}
 
 	/**
 	 * 
