@@ -6,39 +6,29 @@
 		gameInput.addListener("keydown", bind(this, keyDownHandler));
 		gameInput.addListener("keyup", bind(this, keyUpHandler));
 	}
-	var p = Scene.prototype = new Container;
+	var p = Scene.prototype = new Container();
 	
-	p.super_initialize = p.initialize;
-	
+	p.Container_initialize = p.initialize;
 	p.initialize = function(){
-		this.super_initialize();
-		
-		console.log(AssetData.player);
+		this.Container_initialize();
 		
 		this.player = new Player(AssetData.player);
-		this.player.x = 100;
-		this.player.y = 100;
 		this.addChild(this.player);
+		
+		var bl = new BuildingLayer("New building layer");
+		this.addChild(bl);
+		
+		this.building = new Building();
+		this.building.wx = 100;
+		this.building.wy = 100;
+		bl.addChild(this.building);
 	} 
 	
 	p.update = function(){
-		this.player.x += this.player.velocity.x;
-		this.player.y += this.player.velocity.y;
-		this.player.roundup();
-
-		if(this.player.x + this.player.width < 0){
-			this.player.x = adventure.stage.canvas.width;
-		}
-		else if(this.player.x > adventure.stage.canvas.width){
-			this.player.x = -this.player.width;
-		}
-
-		if(this.player.y < 0){
-			this.player.y = adventure.stage.canvas.height + this.player.height;
-		}
-		else if(this.player.y - this.player.height > adventure.stage.canvas.height){
-			this.player.y = 0;
-		}
+		this.player.update();
+		this.building.update();
+		camera.x = this.player.wx;
+		camera.y = this.player.wy;
 	}
 	
 	function keyDownHandler(e){

@@ -5,8 +5,6 @@
 	function Player(data){
 		this.initialize();
 		
-		this.velocity = new Vector2D();
-		
 		var spriteSheet = new SpriteSheet(data);
 		if(!spriteSheet.complete){
 			spriteSheet.onComplete = bind(this, function(){
@@ -21,7 +19,14 @@
 			this.addChild(this.animation);
 		}
 	};
-	var p = Player.prototype = new Container
+	var p = Player.prototype = new GameObject();
+	
+	p.GameObject_initialize = p.initialize;
+	p.initialize = function(){
+		this.GameObject_initialize();
+		
+		this.velocity = new Vector2D();
+	}
 	
 	p.run = function(dir){
 		if(this.animation.currentAnimation != 'run'){
@@ -44,6 +49,16 @@
 		// 	this.velocity.zero();
 		// }), 160);
 		TweenLite.to(this.velocity, 0.5, {x:0, y:0});
+	}
+	
+	p.super_update = p.update;
+	p.update = function(){
+		this.wx += this.velocity.x;
+		this.wy += this.velocity.y;
+		
+		this.super_update();
+		
+		this.roundup();
 	}
 	
 	p.roundup = function(){

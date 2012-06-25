@@ -1,6 +1,7 @@
 window.onload = function(){
+	var canvas = document.getElementById('root-canvas')
 	this.adventure = new function(){
-		this.stage = new Stage(document.getElementById('root-canvas'))
+		this.stage = new Stage(canvas)
 		
 		this.init = function(){
 			var scene = new Scene();
@@ -27,6 +28,9 @@ window.onload = function(){
 			this.stage.canvas.focus();
 		}
 	};
+	
+	this.camera = new Camera();
+	this.camera.init(canvas.width, canvas.height, 0.3, 0.7);
 	
 	adventure.init();
 };
