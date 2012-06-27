@@ -6,16 +6,17 @@
 
 	p.init = function(layer){
 		this.layer = layer;
-		this.tx = 0;
+		this.nextBuildingX = 0;
 	};
 
 	p.generate = function(){
-		
-		if(this.tx < camera.x + camera.currentWidth/2){
+		if(this.nextBuildingX < camera.right){
 			var building = new Building();
+			building.wx += this.nextBuildingX;
+			building.wy = Math.random()*10 - 5;
 			this.layer.addChild(building);
-			this.tx += building.width + Math.random()*100;
-			building.wx += this.tx;
+			this.nextBuildingX += building.width + Math.random()*50-25;
+
 		}
 	};
 

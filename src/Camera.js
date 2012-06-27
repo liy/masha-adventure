@@ -50,7 +50,31 @@
 			return this.position.y;
 		}
 	});
+
+	Object.defineProperty(p, "right", {
+		get: function(){
+			return this.position.x + this.currentWidth * (1-this.anchorRatio.x);
+		}
+	});
+
+	Object.defineProperty(p, "left", {
+		get: function(){
+			return this.position.x - this.currentWidth * this.anchorRatio.x;
+		}
+	});
 	
+	Object.defineProperty(p, "top", {
+		get: function(){
+			return this.position.y - this.currentHeight * this.anchorRatio.y;
+		}
+	});
+
+	Object.defineProperty(p, "bottom", {
+		get: function(){
+			return this.position.y + this.currentHeight * (1-this.anchorRatio.y);
+		}
+	});
+
 	window.Camera = Camera;
 	
 }(window));

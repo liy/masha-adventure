@@ -5,8 +5,10 @@
 		var g = new Graphics();
 		g.setStrokeStyle(1);
 		g.beginFill(Graphics.getRGB(Math.random()*255, Math.random()*255, Math.random()*255));
-		this.height = 100+Math.random()*200;
-		this.width = 50+Math.random()*100
+		this.height = 50+Math.random()*200;
+		this.width = 50+Math.random()*200
+		// this.width = 100;
+		// this.height = 100;
 		g.drawRect(0, 0, this.width, -this.height);
 		this.shape = new Shape(g);
 		this.addChild(this.shape);
