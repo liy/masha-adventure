@@ -7,6 +7,13 @@
 		this.name = name;
 	}
 	var p = Layer.prototype = new Container;
+
+	p.update = function(){
+		for(var i=0; i<this.getNumChildren(); ++i){
+			var go = this.getChildAt(i);
+			go.update();
+		}
+	}
 	
 	window.Layer = Layer;
 }(window))
