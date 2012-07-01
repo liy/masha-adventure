@@ -30,7 +30,7 @@ window.onload = function(){
 	};
 	
 	this.camera = new Camera();
-	this.camera.init(canvas.width, canvas.height, 0.3, 0.7);
+	this.camera.init(canvas.width, canvas.height, 0.3, 0.8);
 	
 	adventure.init();
 };

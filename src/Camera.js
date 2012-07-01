@@ -38,7 +38,7 @@
 	p.hitRect = function(x, y, width, height){
 		return this.containsPoint(x, y) || this.containsPoint(x+width, y+height);
 	}
-
+	
 	p.resize = function(w, h){
 		this.currentWidth = w;
 		this.currentHeight = h;
@@ -48,6 +48,8 @@
 	}
 	
 	p.transform = function(go){
+		// TODO: simulate the perspective scrolling, update the x position using a 
+		// scale, further GameObject has smaller scale.
 		go.x = go.wx - this.position.x + this.currentWidth * this.anchorRatio.x
 		go.y = go.wy - this.position.y + this.currentHeight * this.anchorRatio.y
 	}

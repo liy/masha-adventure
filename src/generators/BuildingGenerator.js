@@ -6,29 +6,29 @@
 
 	p.init = function(layer){
 		this.layer = layer;
+		this.nextBuilding = null;
 		this.nextBuildingX = 0;
+		this.createBuilding();
 	};
 
 	p.generate = function(){
-
-
 		if(this.nextBuildingX < camera.right){
-			if(this.layer.getNumChildren() < 1)
-			{
-				var building = new Building();
-				building.name = "building " + this.layer.getNumChildren();
-				building.wx += this.nextBuildingX;
-				// building.wy = Math.random()*10 - 5;
-				this.layer.addChild(building);
-				this.nextBuildingX += building.width + Math.random()*50-25;
-			}
+			this.layer.addChild(this.nextBuilding);
 		}
-		var b = this.layer.getChildAt(0);
-		console.log(b.wx, b.wy, b.width, b.height)
-		console.log(camera.left, camera.top, camera.right, camera.bottom)
 
-		console.log(camera.containsRect(b.wx, b.wy, b.width, b.height));
+		if(this.nextBuilding.inPosition){
+			this.createBuilding();
+		}
 	};
+
+	p.createBuilding = function(){
+		this.nextBuilding = new Building();
+		this.nextBuilding.name = "building " + this.layer.getNumChildren();
+		this.nextBuilding.wy = camera.top;
+		this.nextBuilding.wx = this.nextBuildingX;
+		this.nextBuilding.ty = 0;
+		this.nextBuildingX += this.nextBuilding.width;
+	}
 
 	window.BuildingGenerator = BuildingGenerator;
 }(window));

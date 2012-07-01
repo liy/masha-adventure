@@ -14,10 +14,11 @@
 	p.initialize = function(){
 		this.Container_initialize();
 		
-		this.buidingLayer = new Layer("New building layer");
+		this.buidingLayer = new BuildingLayer("New building layer");
 		this.addChild(this.buidingLayer);
 
 		this.player = new Player(AssetData.player);
+		this.player.wy = 20;
 		this.addChild(this.player);
 
 		this.buildingGenerator = new BuildingGenerator();
