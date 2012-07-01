@@ -1,4 +1,4 @@
-(function(window){
+define(['require', 'utils/bind'], function(){
 	// game input simplify the process of enable and disable the the keyboard event.
 	var gameInput = new function(){
 		this.enabled = true;
@@ -45,4 +45,4 @@
 	};
 	
 	window.gameInput = gameInput;
-}(window));
+});

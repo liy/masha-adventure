@@ -1,4 +1,4 @@
-(function(window){
+define(['require', 'http://code.createjs.com/easeljs-0.4.2.min.js'], function(){
 	/*
 		Layer is an abstract class, should not be used to create instance.
 	*/
@@ -16,4 +16,4 @@
 	}
 	
 	window.Layer = Layer;
-}(window))
+});

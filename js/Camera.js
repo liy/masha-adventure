@@ -1,4 +1,4 @@
-(function(window){
+define(['require', 'math/Vector2D'], function(){
 	var scaleX = 1;
 	var scaleY = 1;
 	var oWidth = 1;
@@ -97,5 +97,4 @@
 	});
 
 	window.Camera = Camera;
-	
-}(window));
+});

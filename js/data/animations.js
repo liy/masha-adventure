@@ -3,10 +3,8 @@
 		
 	}
 	
-
-	
 	AssetData.player = {
-		images: ["assets/images/texture.png", "assets/images/somacruz_run_spritesheet.png", "assets/images/somacruz/somacruz.png"],
+		images: ["img/texture.png", "img/somacruz_run_spritesheet.png", "img/somacruz/somacruz.png"],
 		frames: [
 			[0,0,17,31,0,8,31],
 			[18,0,17,31,0,8,31],

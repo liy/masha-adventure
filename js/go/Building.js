@@ -1,4 +1,4 @@
-(function(window){
+define(["require", 'go/GameObject'], function(){
 	function Building(){
 		this.initialize();
 		
@@ -51,4 +51,4 @@
 	}
 	
 	window.Building = Building;
-}(window));
+});

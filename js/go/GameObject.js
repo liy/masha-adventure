@@ -1,4 +1,4 @@
-(function(window){
+define(['require', 'http://code.createjs.com/easeljs-0.4.2.min.js'], function(){
 	function GameObject(){
 		this.initialize();
 	};
@@ -17,4 +17,4 @@
 	}
 	
 	window.GameObject = GameObject;
-}(window))
+});

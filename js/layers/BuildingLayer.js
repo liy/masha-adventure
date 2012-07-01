@@ -1,4 +1,4 @@
-(function(window){
+define(['require', 'layers/Layer'], function(){
 	function BuildingLayer(name){
 		this.initialize();
 		this.name = name;
@@ -22,4 +22,4 @@
 	}
 	
 	window.BuildingLayer = BuildingLayer;
-}(window))
+});

@@ -1,4 +1,4 @@
-(function(window){
+define(['require', 'go/Building'], function(){
 	function BuildingGenerator(){
 		
 	}

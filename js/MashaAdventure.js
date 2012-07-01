@@ -1,4 +1,8 @@
+/**
+ * Author: Zhengyi Li
+ */
 window.onload = function(){
+require(['http://code.createjs.com/easeljs-0.4.2.min.js', 'Scene', 'Camera'], function(){
 	var canvas = document.getElementById('root-canvas')
 	this.adventure = new function(){
 		this.stage = new Stage(canvas)
@@ -33,4 +37,5 @@ window.onload = function(){
 	this.camera.init(canvas.width, canvas.height, 0.3, 0.8);
 	
 	adventure.init();
+});
 };

@@ -1,4 +1,4 @@
-(function(window){
+define(['require', 'http://code.createjs.com/easeljs-0.4.2.min.js', 'utils/bind', 'go/GameObject'], function(){
 	
 	var inertiaTimeoutID = 0;
 	
@@ -85,4 +85,4 @@
 	});
 	
 	window.Player = Player;
-}(window));
+});
