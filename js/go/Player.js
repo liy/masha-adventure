@@ -60,12 +60,7 @@ define(['require', 'http://code.createjs.com/easeljs-0.4.2.min.js', 'utils/bind'
 		
 		this.roundup();
 	}
-	
-	p.roundup = function(){
-		this.x = Math.round(this.x);
-		this.y = Math.round(this.y);
-	}
-	
+		
 	Object.defineProperty(p, "width", {
 		set: function(value){
 			//this.getFrame(0).width;

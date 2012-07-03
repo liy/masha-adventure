@@ -53,8 +53,8 @@
 		var cos = Math.cos(radian);
 		var sin = Math.sin(radian);
 
-		var nx = x*cos - y*sin;
-		var ny = x*sin + y*cos;
+		var nx = this.x*cos - this.y*sin;
+		var ny = this.x*sin + this.y*cos;
 
 		this.x = nx;
 		this.y = ny;
@@ -72,7 +72,7 @@
 		return this.dot(v) == 0;
 	}
 	
-	Object.defineProperty(this, "len", {
+	Object.defineProperty(p, "len", {
 		/**
 		 * Set the length of the vector. If current vector's length is 0.
 		 * After length is set, the vector will be a[$length, 0], since we assume
@@ -81,7 +81,7 @@
 		 * 
 		 */
 		set: function(value){
-			var len = this.length;
+			var len = this.len;
 			if(len!=0){
 				var scale = value/len;
 				this.x = this.x*scale;
@@ -105,7 +105,7 @@
 	 * 
 	 */		
 	p.normalize = function(){
-		this.length = 1;
+		this.len = 1;
 		return this;
 	}
 
@@ -158,7 +158,7 @@
 	 * 
 	 */		
 	p.toString = function(){
-		return "[x: " + this.x + ", y: " + this.y + "], length: " + this.length;
+		return "[x: " + this.x + ", y: " + this.y + "], length: " + this.len;
 	}
 	
 	

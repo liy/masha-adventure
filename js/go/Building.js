@@ -4,15 +4,18 @@ define(["require", 'go/GameObject'], function(){
 		
 		var g = new Graphics();
 		g.setStrokeStyle(1);
-		g.beginFill(Graphics.getRGB(Math.random()*255, Math.random()*255, Math.random()*255));
+		g.beginFill(Graphics.getRGB(Math.floor(Math.random()*255), Math.floor(Math.random()*255), Math.floor(Math.random()*255)));
 		this.height = 50+Math.random()*200;
 		this.width = 50+Math.random()*200;
 		g.drawRect(0, 0, this.width, -this.height);
+		g.endFill();
 		this.shape = new Shape(g);
 		this.addChild(this.shape);
 		this.shape.alpha = 0.5;
 		this.velocity = new Vector2D(0,0);
 		this.g = new Vector2D(0, 2);
+
+		this.radian = 0;
 	}
 	var p = Building.prototype = new GameObject;
 	

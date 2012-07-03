@@ -16,5 +16,10 @@ define(['require', 'http://code.createjs.com/easeljs-0.4.2.min.js'], function(){
 		camera.transform(this);
 	}
 	
+	p.roundup = function(){
+		this.x = Math.round(this.x);
+		this.y = Math.round(this.y);
+	}
+
 	window.GameObject = GameObject;
 });

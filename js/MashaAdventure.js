@@ -1,8 +1,10 @@
 /**
  * Author: Zhengyi Li
  */
+
 window.onload = function(){
-require(['http://code.createjs.com/easeljs-0.4.2.min.js', 'Scene', 'Camera'], function(){
+
+require(['http://code.createjs.com/easeljs-0.4.2.min.js', 'Scene', 'Camera', 'Earth', 'test'], function(){
 	var canvas = document.getElementById('root-canvas')
 	this.adventure = new function(){
 		this.stage = new Stage(canvas)
@@ -34,8 +36,9 @@ require(['http://code.createjs.com/easeljs-0.4.2.min.js', 'Scene', 'Camera'], fu
 	};
 	
 	this.camera = new Camera();
-	this.camera.init(canvas.width, canvas.height, 0.3, 0.8);
+	this.camera.init(canvas.width, canvas.height, 0.5, 0.7);
 	
 	adventure.init();
 });
+
 };

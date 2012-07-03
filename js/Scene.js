@@ -2,7 +2,7 @@ define(['require', 'http://code.createjs.com/easeljs-0.4.2.min.js', 'GameInput',
 	function Scene(){
 		this.initialize();
 		this.name = "scene";
-		
+
 		gameInput.addListener("keydown", bind(this, keyDownHandler));
 		gameInput.addListener("keyup", bind(this, keyUpHandler));
 		switches.addListener("switch press", bind(this, switchPressHandler));
@@ -18,11 +18,13 @@ define(['require', 'http://code.createjs.com/easeljs-0.4.2.min.js', 'GameInput',
 		this.addChild(this.buidingLayer);
 
 		this.player = new Player(AssetData.player);
-		this.player.wy = 20;
 		this.addChild(this.player);
 
 		this.buildingGenerator = new BuildingGenerator();
 		this.buildingGenerator.init(this.buidingLayer);
+
+		this.earth = new Earth(this.buidingLayer);
+		this.addChild(this.earth);
 	} 
 	
 	p.update = function(){
@@ -32,6 +34,7 @@ define(['require', 'http://code.createjs.com/easeljs-0.4.2.min.js', 'GameInput',
 		camera.y = this.player.wy;
 
 		this.buildingGenerator.generate();
+		this.earth.update();
 	}
 	
 	function keyDownHandler(e){
