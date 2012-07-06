@@ -13,27 +13,26 @@ define(['require', 'http://code.createjs.com/easeljs-0.4.2.min.js', 'GameInput',
 	p.Container_initialize = p.initialize;
 	p.initialize = function(){
 		this.Container_initialize();
-		
-		this.buidingLayer = new BuildingLayer("New building layer");
-		this.addChild(this.buidingLayer);
+
+		this.earth = new Earth(this.buidingLayer);
+		this.addChild(this.earth);
+
+		this.buildingGenerator = new BuildingGenerator();
+		this.buildingGenerator.init(this.earth.buildingLayer);
 
 		this.player = new Player(AssetData.player);
 		this.addChild(this.player);
 
-		this.buildingGenerator = new BuildingGenerator();
-		this.buildingGenerator.init(this.buidingLayer);
-
-		this.earth = new Earth(this.buidingLayer);
-		this.addChild(this.earth);
+		this.buildingGenerator.generate();
+		this.buildingGenerator.generate();
 	} 
 	
 	p.update = function(){
-		this.buidingLayer.update();
 		this.player.update();
 		camera.x = this.player.wx;
 		camera.y = this.player.wy;
 
-		this.buildingGenerator.generate();
+		// this.buildingGenerator.generate();
 		this.earth.update();
 	}
 	

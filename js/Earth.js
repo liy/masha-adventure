@@ -1,14 +1,15 @@
-require(['require', 'http://code.createjs.com/easeljs-0.4.2.min.js', 'go/GameObject'], function(){
+require(['require', 'layers/Layer', 'http://code.createjs.com/easeljs-0.4.2.min.js', 'go/GameObject'], function(){
 
-	function Earth(layer){
+	function Earth(){
 		this.initialize();
-		this.layer = layer;
+		this.buildingLayer = new BuildingLayer();
+		this.addChild(this.buildingLayer);
 	}
-	var p = Earth.prototype = new GameObject;
+	var p = Earth.prototype = new Layer;
 
-	p.GameObject_initialize = p.initialize;
+	p.Layer_initialize = p.initialize;
 	p.initialize = function(){
-		this.GameObject_initialize();
+		this.Layer_initialize();
 
 		this.g = new Graphics();
 
@@ -17,8 +18,10 @@ require(['require', 'http://code.createjs.com/easeljs-0.4.2.min.js', 'go/GameObj
 
 		this.radius = 800;
 		this.pv = new Vector2D(this.radius, 0);
-		this.rotateDelta = -0.3;
-		this.radian = -(Math.PI - this.radianRange)/2;
+		this.rotateDelta = -0.001;
+		this.chord = 800;
+		this.radian = -(Math.PI-Math.acos(1 - (this.chord*this.chord)/(2*this.radius*this.radius)))/2;
+		console.log();
 	}
 
 	p.rotate = function(){
@@ -30,18 +33,26 @@ require(['require', 'http://code.createjs.com/easeljs-0.4.2.min.js', 'go/GameObj
 		this.pv.y += this.radius;
 	}
 
-	p.GameObject_update = p.update;
 	p.update = function(){
-		this.GameObject_update();
-
-		this.g.clear();
-
 		this.rotate();
-		
-		this.g.setStrokeStyle(2)
-		this.g.beginStroke(Graphics.getRGB(0,0,0));
-		this.g.drawCircle(0, this.radius, this.radius);
-		this.g.endFill();
+
+		var len = this.buildingLayer.getNumChildren();
+		if(len != 0){
+			for(var i=0; i<len; ++i){
+				var building = this.buildingLayer.getChildAt(i);
+				// building.wx = Math.cos(building.radian) * this.radius;
+				// building.wy = Math.sin(building.radian) * this.radius + this.radius; 
+				// building.rotation = 90 + building.radian * 180/Math.PI;
+
+				building.update();
+			}
+
+			var tailBuilding = this.buildingLayer.getChildAt(0);
+			if(!camera.hitRect(building.wx-building.regX, tailBuilding.wy-tailBuilding.height, tailBuilding.width, tailBuilding.height)){
+				tailBuilding.destroy();
+				this.buildingLayer.removeChildAt(tailBuilding);
+			}
+		}
 	}
 
 	window.Earth = Earth;

@@ -12,11 +12,8 @@ define(['require', 'go/Building'], function(){
 	};
 
 	p.generate = function(){
-		if(this.nextBuildingX < camera.right){
-			this.layer.addChild(this.nextBuilding);
-		}
-
-		if(this.nextBuilding.inPosition){
+		// if(this.nextBuilding.inPosition){
+		if(this.nextBuilding){
 			this.createBuilding();
 		}
 	};
@@ -28,6 +25,9 @@ define(['require', 'go/Building'], function(){
 		this.nextBuilding.wx = this.nextBuildingX;
 		this.nextBuilding.ty = 0;
 		this.nextBuildingX += this.nextBuilding.width;
+			this.layer.addChild(this.nextBuilding);
+
+		console.log("generated: " + this.nextBuildingX);
 	}
 
 	window.BuildingGenerator = BuildingGenerator;
