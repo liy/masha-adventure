@@ -19,9 +19,13 @@ define(["require", 'go/GameObject'], function(){
 		this.velocity = new Vector2D();
 		this.gravity = new Vector2D();
 
+		this.regX = this.width/2;
+
 		this.radian = 0;
 
-		this.regX = this.width/2;
+		// The delta radian is used to find the next building's radian:
+		// 		this.radian + this.deltaRadian + nextBuilding.deltaRadian
+		this.deltaRadian = (2*Math.PI)/(Math.PI*2*earth.radius/(this.width*0.5));
 	}
 	var p = Building.prototype = new GameObject;
 	
@@ -45,23 +49,6 @@ define(["require", 'go/GameObject'], function(){
 		this.GameObject_update();
 		
 		// update gravity
-		var dx = this.x + this.velocity.x - this.earth.x;
-		var dy = this.y + this.velocity.y - this.earth.y;
-		if(dx*dx + dy*dy <= this.earth.radius*this.earth.radius){
-			this.wx = Math.cos(this.radian)*this.earth.radius;
-			this.wy = Math.sin(this.radian)*this.earth.radius;
-		}
-		else{
-			this.gravity.x = -this.x;
-			this.gravity.y = this.earth.radius - this.y;
-			this.gravity.len = 0.98;
-
-			// update velocity
-			this.velocity.add(this.gravity);
-
-			this.wx = Math.cos(this.radian)*this.earth.radius;
-			this.wy = Math.sin(this.radian)*this.earth.radius;
-		}
 
 		// update radian
 		this.radian += this.earth.rotateDelta;

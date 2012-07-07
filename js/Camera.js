@@ -1,23 +1,28 @@
 define(['require', 'math/Vector2D'], function(){
-	var scaleX = 1;
-	var scaleY = 1;
 	var oWidth = 1;
 	var oHeight = 1;
+	var scaleX = 1;
+	var scaleY = 1;
+
 	function Camera(){
 	}
 	var p = Camera.prototype;
 	
 	p.init = function(w, h, anchorRatioX, anchorRatioY){
-		oWidth = this.currentWidth = w;
-		oHeight = this.currentHeight = h;
-		
+		this.matrix = Matrix2D.identity.clone();
+
+		this.currentWidth = w;
+		this.currentHeight = h;
+		oWidth = w;
+		oHeight = h;
+
 		this.rotation = 0;
 		
 		this.position = new Vector2D();
 		this.anchorRatio = new Vector2D(anchorRatioX, anchorRatioY);
-		
-		this.matrix = Matrix2D.identity.clone();
-		console.log(this.matrix);
+
+		// in degree
+		this.rotation = 0;
 	}
 	
 	p.containsPoint = function(x, y){
@@ -39,19 +44,39 @@ define(['require', 'math/Vector2D'], function(){
 		return this.containsPoint(x, y) || this.containsPoint(x+width, y+height);
 	}
 	
-	p.resize = function(w, h){
-		this.currentWidth = w;
-		this.currentHeight = h;
+	// p.resize = function(w, h){
+	// 	this.currentWidth = w;
+	// 	this.currentHeight = h;
 		
-		scaleX = oWidth/w;
-		scaleY = oHeight/h;
-	}
+	// 	scaleX = oWidth/w;
+	// 	scaleY = oHeight/h;
+	// }
 	
 	p.transform = function(go){
 		// TODO: simulate the perspective scrolling, update the x position using a 
 		// scale, further GameObject has smaller scale.
-		go.x = go.wx - this.position.x + this.currentWidth * this.anchorRatio.x
-		go.y = go.wy - this.position.y + this.currentHeight * this.anchorRatio.y
+		// go.x = go.wx - this.position.x + this.currentWidth * this.anchorRatio.x
+		// go.y = go.wy - this.position.y + this.currentHeight * this.anchorRatio.y
+
+
+		// TransMatrices::Instance()->modelView.Scale(scale, scale, 1.0f);
+		// TransMatrices::Instance()->modelView.Translate(currentWidth * anchorRatio.x, currentHeight * anchorRatio.y, 0.0f);
+		// TransMatrices::Instance()->modelView.RotateZ(rotation);
+		// TransMatrices::Instance()->modelView.LookAt(position.x, position.y, 1.0f,
+		// 	position.x, position.y, 0.0f,
+		// 	0.0f, 1.0f, 0.0f);
+
+		this.matrix.identity();
+		this.matrix.rotate(-this.rotation);
+		this.matrix.translate(this.currentWidth*this.anchorRatio.x - this.x, this.currentHeight*this.anchorRatio.y - this.y);
+		this.matrix.scale(scaleX, scaleY);
+
+
+		// console.log("go.getMatrix(): " + go.getConcatenatedMatrix());
+		var matrix = new Matrix2D();
+		matrix.appendMatrix(this.matrix);
+		matrix.appendMatrix(go.getConcatenatedMatrix());
+		// matrix.decompose(go);
 	}
 	
 	Object.defineProperty(p, "x", {
