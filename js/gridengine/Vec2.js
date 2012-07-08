@@ -1,9 +1,16 @@
 (function(window){
-	function Vector2D(x, y){
-		this.x = x || 0;
-		this.y = y || 0;
+	function Vec2(x, y){
+		if(x != null)
+			this.x = x;
+		else
+			this.x = 0;
+
+		if(y != null)
+			this.y = y;
+		else
+			this.y = 0;
 	};
-	var p = Vector2D.prototype;
+	var p = Vec2.prototype;
 	
 	p.add = function(v){
 		this.x += v.x;
@@ -144,12 +151,21 @@
 	}
 
 	/**
+	 *
+	 */
+	p.abs = function(){
+		this.x = Math.abs(this.x);
+		this.y = Math.abs(this.y);
+		return this;
+	}
+
+	/**
 	 * 
 	 * @return 
 	 * 
 	 */		
 	p.clone = function(){
-		return new Vector2D(this.x, this.y);
+		return new Vec2(this.x, this.y);
 	}
 
 	/**
@@ -161,6 +177,14 @@
 		return "[x: " + this.x + ", y: " + this.y + "], length: " + this.len;
 	}
 	
-	
-	window.Vector2D = Vector2D;
+	// utils functions
+	Vec2.min = function(v1, v2){
+		return new Vec2(Math.min(v1.x, v2.x), Math.min(v1.y, v2.y));
+	}
+
+	Vec2.max = function(v1, v2){
+		return new Vec2(Math.max(v1.x, v2.x), Math.max(v1.y, v2.y));
+	}
+
+	window.Vec2 = Vec2;
 }(window));

@@ -93,10 +93,116 @@
 
 		this.tx = cos*tx - sin*this.ty;
 		this.ty = sin*tx + cos*this.ty;
+
+		return this;
+	}
+
+	// TODO: polish the transform method, should it be in the Mat3 class or Vec2 class
+	/**
+	 * transform the Vec2 instance.
+     * | a	  c    tx |       | x |
+	 * | b    d    ty |   *   | y |
+	 * | 0    0    1  |       | 1 |
+	 */
+	p.transform = function(v){
+		var x = v.x;
+		var y = v.y;
+		v.x = this.a*x + this.c*y + this.tx;
+		v.y = this.b*x + this.d*y + this.ty;
+
+		return v;
+	}
+
+	p.clone = function(){
+		return new Mat3(this.a, this.b, this.c, this.d, this.tx, this.ty);
 	}
 
 	p.toString = function(){
 		return "[Mat3 (a="+this.a+", b="+this.b+", c="+this.c+", d="+this.d+", tx="+this.tx+", ty="+this.ty+")]";
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+	/**
+	 * Concatenates the specified matrix properties with this matrix. All parameters are required.
+	 * @method prepend
+	 * @param {Number} a
+	 * @param {Number} b
+	 * @param {Number} c
+	 * @param {Number} d
+	 * @param {Number} tx
+	 * @param {Number} ty
+	 * @return {Matrix2D} This matrix. Useful for chaining method calls.
+	 **/
+	p.prepend = function(a, b, c, d, tx, ty) {
+		var tx1 = this.tx;
+		if (a != 1 || b != 0 || c != 0 || d != 1) {
+			var a1 = this.a;
+			var c1 = this.c;
+			this.a  = a1*a+this.b*c;
+			this.b  = a1*b+this.b*d;
+			this.c  = c1*a+this.d*c;
+			this.d  = c1*b+this.d*d;
+		}
+		this.tx = tx1*a+this.ty*c+tx;
+		this.ty = tx1*b+this.ty*d+ty;
+		return this;
+	}
+
+	/**
+	 * Appends the specified matrix properties with this matrix. All parameters are required.
+	 * @method append
+	 * @param {Number} a
+	 * @param {Number} b
+	 * @param {Number} c
+	 * @param {Number} d
+	 * @param {Number} tx
+	 * @param {Number} ty
+	 * @return {Matrix2D} This matrix. Useful for chaining method calls.
+	 **/
+	p.append = function(a, b, c, d, tx, ty) {
+		var a1 = this.a;
+		var b1 = this.b;
+		var c1 = this.c;
+		var d1 = this.d;
+
+		this.a  = a*a1+b*c1;
+		this.b  = a*b1+b*d1;
+		this.c  = c*a1+d*c1;
+		this.d  = c*b1+d*d1;
+		this.tx = tx*a1+ty*c1+this.tx;
+		this.ty = tx*b1+ty*d1+this.ty;
+		return this;
+	}
+
+	/**
+	 * Prepends the specified matrix with this matrix.
+	 * @method prependMatrix
+	 * @param {Matrix2D} matrix
+	 **/
+	p.prependMatrix = function(matrix) {
+		this.prepend(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+		return this;
+	}
+
+	/**
+	 * Appends the specified matrix with this matrix.
+	 * @method appendMatrix
+	 * @param {Matrix2D} matrix
+	 * @return {Matrix2D} This matrix. Useful for chaining method calls.
+	 **/
+	p.appendMatrix = function(matrix) {
+		this.append(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+		return this;
 	}
 
 	window.Mat3 = Mat3;

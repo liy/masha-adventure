@@ -13,8 +13,8 @@
 		
 		this.rotation = 0;
 		
-		this.position = new Vector2D();
-		this.anchorRatio = new Vector2D(anchorRatioX, anchorRatioY);
+		this.position = new Vec2();
+		this.anchorRatio = new Vec2(anchorRatioX, anchorRatioY);
 	}
 	
 	p.containsPoint = function(x, y){

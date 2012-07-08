@@ -37,23 +37,31 @@
 		}
 	});
 
-	p.containsPoint = function(x, y){
-		return x >= this.left && x <= this.right && y >= this.top && y <= this.bottom;
+	p.containsPoint = function(x, y, countForTouch){
+		// console.log(this.toString() + " x: " + x + "  y: " + y);
+		if(countForTouch==null || countForTouch)
+			return x >= this.left && x <= this.right && y >= this.top && y <= this.bottom;
+		else
+			return x > this.left && x < this.right && y > this.top && y < this.bottom;
 	}
 
 	/**
 	 * Whether the Camera contains the whole rectangle.
 	 */
-	p.containsRect = function(x, y, width, height){
-		return this.containsPoint(x, y) && this.containsPoint(x+width, y+height);
+	p.containsRect = function(x, y, width, height, countForTouch){
+		return this.containsPoint(x, y, countForTouch) && this.containsPoint(x+width, y+height, countForTouch);
 	}
 
 	/**
 	 * As long as a corner of the rectangle is in the camera, it is treated as hit by
 	 * the camera
 	 */
-	p.hitRect = function(x, y, width, height){
-		return this.containsPoint(x, y) || this.containsPoint(x+width, y+height);
+	p.hitRect = function(x, y, width, height, countForTouch){
+		return this.containsPoint(x, y, countForTouch) || this.containsPoint(x+width, y+height, countForTouch);
+	}
+
+	p.toString = function(){
+		return "[Rect (x="+this.x+", y="+this.y+", width="+this.width+", height="+this.height+")]";
 	}
 
 	window.Rect = Rect;
