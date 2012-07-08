@@ -4,41 +4,29 @@
 
 window.onload = function(){
 
-require(['http://code.createjs.com/easeljs-0.4.2.min.js', 'Scene', 'Camera', 'Earth', 'test'], function(){
-	var canvas = document.getElementById('root-canvas')
+	var canvas = document.getElementById('root-canvas');
+	var stage = new Stage(canvas);
+
 	this.adventure = new function(){
-		this.stage = new Stage(canvas)
-		
-		this.init = function(){
-			var scene = new Scene();
-			this.stage.addChild(scene);
+		var fps = 60;
+		var interval = 1000/60
+		setInterval(mainloop, interval)
 
-			Ticker.setFPS(60);
-			Ticker.addListener(this);
+		var container = new Container();
+		stage.addChild(container);
 
-			this.tick = function(){
-				scene.update();
-				this.stage.update();
-			};
+		var bmp = new Bitmap('img/paw.png');
+		container.addChild(bmp);
 
-			this.stage.canvas.onblur = function(e){
-				gameInput.enabled = false;
-				switches.enabled = false;
-			};
-
-			this.stage.canvas.onfocus = function(e){
-				gameInput.enabled = true;
-				switches.enabled = true;
-			};
-
-			this.stage.canvas.focus();
-		}
+		container.x = -100;
+		bmp.matrix.translate(100, 100);
+		trace(bmp.matrix.toString())
 	};
+
+	function mainloop(){
+		stage.draw();
+	}
 	
 	this.camera = new Camera();
 	this.camera.init(canvas.width, canvas.height, 0.5, 0.7);
-	
-	adventure.init();
-});
-
 };

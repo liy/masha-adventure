@@ -62,14 +62,22 @@
 	<script src="../accessibility/Switches.js"></script>
 
     <script src="js/plugins.js"></script>
-    <script type="text/javascript" data-main="js/MashaAdventure" src="js/vendor/require.js"></script>
-    <script type="text/javascript">
-        requirejs.config({
-            config: {
-                urlArgs: (new Date()).getTime() + "" + Math.floor(Math.random()*10000)
-            }
-        });
-    </script>
+
+    <script src="js/utils/bind.js"></script>
+    <script src="js/utils/common.js"></script>
+
+    <script type="text/javascript" src="js/gridengine/Mat3.js"></script>
+    <script type="text/javascript" src="js/gridengine/Vector2D.js"></script>
+
+    <script type="text/javascript" src="js/gridengine/Rect.js"></script>
+    <script type="text/javascript" src="js/gridengine/GameObject.js"></script>
+    <script type="text/javascript" src="js/gridengine/DisplayObject.js"></script>
+    <script type="text/javascript" src="js/gridengine/Bitmap.js"></script>
+    <script type="text/javascript" src="js/gridengine/Container.js"></script>
+    <script type="text/javascript" src="js/gridengine/Stage.js"></script>
+    <script type="text/javascript" src="js/gridengine/Camera.js"></script>
+
+    <script type="text/javascript" src="js/MashaAdventure.js"></script>
     <!-- end scripts -->
 
     <!-- Asynchronous Google Analytics snippet. Change UA-XXXXX-X to be your site's ID.
