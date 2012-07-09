@@ -219,8 +219,11 @@
 	})
 
 	p.getGlobalVec2 = function(v){
-		var invert = this.concatedMatrix.clone().invert();
-	    return invert.transform(v).clone();
+		// var invert = this.concatedMatrix.clone().invert();
+	    // return invert.transform(v);
+	    var invert = this.concatedMatrix.clone().invert();
+        return invert.transform(v);
+
 	}
 
 	window.DisplayObject = DisplayObject;

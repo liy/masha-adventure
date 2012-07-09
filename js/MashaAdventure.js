@@ -20,8 +20,8 @@ window.onload = function(){
 
 		bigContainer = new Container();
 		bigContainer.name = "BigContainer";
-		bigContainer.x = 100;
-		bigContainer.y = 100;
+		bigContainer.x = 50;
+		bigContainer.y = 50;
 		stage.addChild(bigContainer);
 
 		container = new Container();
@@ -51,6 +51,13 @@ window.onload = function(){
 
 		canvas.addEventListener('click', bind(this, function(e){
 	        console.log("Mouse click: " + e.clientX + "," + e.clientY);
+
+	        // var invert = bigContainer.concatedMatrix.clone().invert();
+	        // var clickPos = invert.transform(new Vec2(e.clientX, e.clientY));
+	        var clickPos = bigContainer.getGlobalVec2(new Vec2(e.clientX, e.clientY));
+	        console.log(clickPos.x, clickPos.y);
+	        bmp2.x = clickPos.x;
+	        bmp2.y = clickPos.y;
 
 	    }, false));
 
