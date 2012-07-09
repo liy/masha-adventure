@@ -1,9 +1,16 @@
 (function(window){
 	
 	function Container(){
-		this._children = [];
+		this.klass = "Container";
+		this.init();
 	}
 	var p = Container.prototype = new DisplayObject();
+
+	p.super_init = p.init;
+	p.init = function(){
+		this.super_init();
+		this._children = [];
+	}
 
 	p.draw = function(ctx){
 		// update matrix, getting ready for apply to the context.

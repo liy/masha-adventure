@@ -1,7 +1,7 @@
 (function(window){
 	function GameObject(){
 		this._x = 0;
-		this._y = 0;	
+		this._y = 0;
 	}
 	var p = GameObject.prototype;
 

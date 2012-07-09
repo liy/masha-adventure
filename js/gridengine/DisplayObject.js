@@ -3,6 +3,7 @@
 	 * Abstract class
 	 */
 	function DisplayObject(){
+		this.klass = "DisplayObject";
 		this.init();
 	}
 	var p = DisplayObject.prototype = new GameObject();
@@ -12,12 +13,16 @@
 
 		this.parent = null;
 
+		this._x = 0;
+		this._y = 0;
+
 		this._radian = 0;
 		this._scaleX = 1;
 		this._scaleY = 1;
 
 		// 2d affine transform matrix, internal use only.
 		this._m = new Mat3();
+		this._cm = new Mat3();
 
 		// TODO: Axis-aligned bounding box, for speeding up the rendering and hit test
 		this._aabb = new AABB();
@@ -48,11 +53,7 @@
 			this._m.rotate(this._radian);//rotation transform
 			this._m.translate(this._x, this._y);//normal position translation transform
 
-			this.dirtyMatrix = true;
-
-
-			// if(this instanceof Container)
-				// console.log("dirty: " + this._m)
+			this.dirtyMatrix = false;
 		}
 	}
 
@@ -103,12 +104,17 @@
 
 	Object.defineProperty(p, "concatedMatrix", {
 		get: function(){
+			this._cm.a = this._m.a;
+			this._cm.b = this._m.b;
+			this._cm.c = this._m.c;
+			this._cm.d = this._m.d;
+			this._cm.tx = this._m.tx;
+			this._cm.ty = this._m.ty;
 			if(this.parent != null){
-				var mm = this._m.clone();
-				return mm.prependMatrix(this.parent._m);
+				return this._cm.prependMatrix(this.parent.concatedMatrix);
 			}
 			else
-				return this._m;
+				return this._cm;
 		}
 	})
 
@@ -211,6 +217,11 @@
 				this.parent.dirtyAABB = true;
 		}
 	})
+
+	p.getGlobalVec2 = function(v){
+		var invert = this.concatedMatrix.clone().invert();
+	    return invert.transform(v).clone();
+	}
 
 	window.DisplayObject = DisplayObject;
 }(window))
