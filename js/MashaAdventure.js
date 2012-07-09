@@ -7,11 +7,11 @@ window.onload = function(){
 	var canvas = document.getElementById('root-canvas');
 	var stage = new Stage(canvas);
 
-	var bmp1;
-	var bmp2;
-	var bmp3;
+	var bmp;
 	var container;
 	var bigContainer;
+
+	var movingBmps = [];
 
 	this.adventure = new function(){
 		var fps = 60;
@@ -29,25 +29,26 @@ window.onload = function(){
 		bigContainer.addChild(container);
 
 
-		bmp1 = new Bitmap('img/rails.png');
-		bmp1.anchorX = 25;
-		bmp1.anchorY = 32;
-		container.addChild(bmp1);
+		bmp = new Bitmap('img/rails.png');
+		bmp.anchorX = 25;
+		bmp.anchorY = 32;
+		container.addChild(bmp);
+		bmp.radian = Math.PI/4;
 
-		bmp1.radian = Math.PI/4;
-
-		bmp2 = new Bitmap('img/rails.png');
-		bmp2.x = bmp2.y = 0;
-		container.addChild(bmp2);
-
-		// bmp2.radian = Math.PI/4;
-
-		bmp3 = new Bitmap('img/rails.png');
-		bmp3.x = 400;
-		bmp3.y = 500;
-		bmp3.anchorX = 25;
-		bmp3.anchorY = 32;
-		container.addChild(bmp3);
+		for(var i=0; i<1000; ++i){
+			var b = new Bitmap('img/rails.png');
+			if(Math.random() < 0.8){
+				b.anchorX = 25;
+				b.anchorY = 32;
+			}
+			b.scaleX = b.scaleY = 0.2;
+			b.dr = Math.random()*0.2;
+			b.x = b.tx = Math.random()*500;
+			b.y = b.ty = Math.random()*300;
+			b.dm = Math.random()*10 + 5;
+			movingBmps.push(b);
+			container.addChild(b);
+		}
 
 		canvas.addEventListener('click', bind(this, function(e){
 	        console.log("Mouse click: " + e.clientX + "," + e.clientY);
@@ -56,8 +57,8 @@ window.onload = function(){
 	        // var clickPos = invert.transform(new Vec2(e.clientX, e.clientY));
 	        var clickPos = bigContainer.getGlobalVec2(new Vec2(e.clientX, e.clientY));
 	        console.log(clickPos.x, clickPos.y);
-	        bmp2.x = clickPos.x;
-	        bmp2.y = clickPos.y;
+	        bmp.x = clickPos.x;
+	        bmp.y = clickPos.y;
 
 	    }, false));
 
@@ -65,34 +66,56 @@ window.onload = function(){
 	};
 
 	function shrinkComplete(){
-		TweenLite.to(bmp3, 1, {scaleX:1, onComplete:enlargeComplete})
+		TweenLite.to(bmp, 1, {scaleX:1, onComplete:enlargeComplete})
 	}
 
 	function enlargeComplete(){
-		TweenLite.to(bmp3, 1, {scaleX:2, onComplete:shrinkComplete})
+		TweenLite.to(bmp, 1, {scaleX:2, onComplete:shrinkComplete})
 	}
 
 	function mainloop(){
+		var ctx = stage.context;
+
+		for(var i=0; i<movingBmps.length; ++i){
+			if(Math.abs(movingBmps[i].tx - movingBmps[i].x) < 0.3 && Math.abs(movingBmps[i].ty - movingBmps[i].y) < 0.3){
+				movingBmps[i].tx = Math.random()*500*Math.random();
+				movingBmps[i].ty = Math.random()*300*Math.random();
+			}
+			else{
+				movingBmps[i].x += (movingBmps[i].tx - movingBmps[i].x)/movingBmps[i].dm;
+				movingBmps[i].y += (movingBmps[i].ty - movingBmps[i].y)/movingBmps[i].dm;
+			}
+			movingBmps[i].radian += movingBmps[i].dr;
+		}
+
+		bmp.radian += 0.2
+
 		stage.draw();
 
-		bmp1.radian += 0.02;
-		bmp3.radian -= 0.01;
+		// for(var i=0; i<movingBmps.length; ++i){
+		// 	ctx.save();                  // Save the current state  
+		// 	ctx.fillStyle = '#00FFFF'       // Make changes to the settings 
+		// 	ctx.globalAlpha = 0.3;
+		// 	aabb = movingBmps[i].aabb;
+		// 	ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
+		// 	ctx.restore();
+		// }
 
-		var ctx = stage.context;
-		ctx.setTransform(1, 0, 0, 1, 0, 0);
-		ctx.save();                  // Save the current state  
-		ctx.fillStyle = '#FF0000'       // Make changes to the settings 
-		ctx.globalAlpha = 0.5;
-		var aabb = container.aabb;
-		ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
-		ctx.restore();
+		
+		// ctx.setTransform(1, 0, 0, 1, 0, 0);
+		// ctx.save();                  // Save the current state  
+		// ctx.fillStyle = '#FF0000'       // Make changes to the settings 
+		// ctx.globalAlpha = 0.5;
+		// var aabb = container.aabb;
+		// ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
+		// ctx.restore();
 
-		ctx.save();                  // Save the current state  
-		ctx.fillStyle = '#00FF00'       // Make changes to the settings 
-		ctx.globalAlpha = 0.3;
-		aabb = bmp3.aabb;
-		ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
-		ctx.restore();
+		// ctx.save();                  // Save the current state  
+		// ctx.fillStyle = '#00FF00'       // Make changes to the settings 
+		// ctx.globalAlpha = 0.3;
+		// aabb = bmp.aabb;
+		// ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
+		// ctx.restore();
 
 		// console.log(bmp.aabb)
 	}

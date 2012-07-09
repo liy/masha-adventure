@@ -36,6 +36,7 @@
 		// Internally, you should use this private variable carefully, you should know what you are doing.
 		this._dirtyAABB = true;
 		this.dirtyMatrix = true;
+		this.allowAABB = false;
 	}
 
 	p.updateMatrix = function(){
@@ -209,12 +210,15 @@
 			return this._aabb;
 		},
 		set: function(flag){
-			this._dirtyAABB = flag;
+			// only calculate the aabb when it is enabled.
+			if(this.allowAABB)
+				this._dirtyAABB = flag;
 
-			// If this DisplayObject's bounding box become dirty, then its parent Container's bounding box MIGHT
-			// needs to be re-comput as well.
-			if(flag && this.parent != null)
-				this.parent.dirtyAABB = true;
+				// If this DisplayObject's bounding box become dirty, then its parent Container's bounding box MIGHT
+				// needs to be re-comput as well.
+				if(flag && this.parent != null)
+					this.parent.dirtyAABB = true;
+			}
 		}
 	})
 
