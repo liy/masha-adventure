@@ -48,10 +48,11 @@
 			this._m.rotate(this._radian);//rotation transform
 			this._m.translate(this._x, this._y);//normal position translation transform
 
-			// if(this.parent != null)
-				// this._m.prepend(this.parent._m.a, this.parent._m.b, this.parent._m.c, this.parent._m.d, this.parent._m.tx, this.parent._m.ty);
+			this.dirtyMatrix = true;
 
-			this.dirtyMatrix = false;
+
+			// if(this instanceof Container)
+				// console.log("dirty: " + this._m)
 		}
 	}
 
@@ -104,10 +105,10 @@
 		get: function(){
 			if(this.parent != null){
 				var mm = this._m.clone();
-				return mm.prependMatrix(this.parent.matrix);
+				return mm.prependMatrix(this.parent._m);
 			}
 			else
-				return this.matrix;
+				return this._m;
 		}
 	})
 

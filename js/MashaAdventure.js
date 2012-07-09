@@ -50,12 +50,12 @@ window.onload = function(){
 		bmp3.anchorY = 32;
 		container.addChild(bmp3);
 
-		container.tx = 0;
-		container.ty = 0;
+		// container.tx = 0;
+		// container.ty = 0;
 		canvas.addEventListener('click', bind(this, function(e){
 	        var message = "Mouse click: " + e.clientX + "," + e.clientY;
-	        container.tx = e.clientX;
-	        container.ty = e.clientY;
+	        bigContainer.x = e.clientX;
+	        bigContainer.y = e.clientY;
 
 	        console.log(message);
 	    }, false));
@@ -75,12 +75,14 @@ window.onload = function(){
 		// container.x += (container.tx - container.x)/10;
 		// container.y += (container.ty - container.y)/10;
 
+		// console.log(bigContainer.matrix)
 		stage.draw();
 
 		bmp1.radian += 0.02;
 		bmp3.radian -= 0.01;
 
 		var ctx = stage.context;
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.save();                  // Save the current state  
 		ctx.fillStyle = '#FF0000'       // Make changes to the settings 
 		ctx.globalAlpha = 0.5;
