@@ -1,9 +1,21 @@
 (function(window){
-	function Rect(){
-		this.x = 0;
-		this.y = 0;
-		this.width = 0;
-		this.height = 0;
+	function Rect(x, y, width, height){
+		if(x == null) 
+			this.x = 0;
+		else
+			this.x = x;
+		if(y == null)
+			this.y = 0;
+		else
+			this.y = y;
+		if(width == null)
+			this.width = 0;
+		else
+			this.width = width;
+		if(height == null)
+			this.height = 0;
+		else
+			this.height = height;
 	}
 	var p = Rect.prototype;
 
@@ -60,9 +72,12 @@
 		return this.containsPoint(x, y, countForTouch) || this.containsPoint(x+width, y+height, countForTouch);
 	}
 
+	p.clone = function(){
+		return new Rect(this.x, this.y, this.width, this.height);
+	}
+
 	p.toString = function(){
 		return "[Rect (x="+this.x+", y="+this.y+", width="+this.width+", height="+this.height+")]";
 	}
-
 	window.Rect = Rect;
 }(window))

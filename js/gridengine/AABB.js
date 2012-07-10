@@ -1,123 +1,85 @@
 (function(window){
-	function AABB(lowerBound, upperBound){
-		if(lowerBound == null)
-			this.lowerBound = new Vec2();
-		else
-			this.lowerBound = lowerBound;
+	function AABB(rect){
+		if(rect == null)
+			rect = new Rect();
+		// ccw vertices arrangement
+		// 0------3
+		// |      |
+		// 1------2
+		this.vertices = [];
+		this.vertices[0] = new Vec2(rect.x, rect.y);
+		this.vertices[1] = new Vec2(rect.left, rect.bottom);
+		this.vertices[2] = new Vec2(rect.right, rect.bottom);
+		this.vertices[3] = new Vec2(rect.right, rect.top);
 
-		if(upperBound == null)
-			this.upperBound = new Vec2();
-		else
-			this.upperBound = upperBound;
-
-		// convinient Rectangle object for public access, you should not modify the rect object.
-		this.rect = new Rect();
-		updateRect(this);
+		this.lowerBound = this.vertices[0];
+		this.upperBound = this.vertices[2];
 	}
 	var p = AABB.prototype;
+
+	Object.defineProperty(p, 'x', {
+		get: function(){
+			return this.vertices[0].x;
+		}
+	})
+
+	Object.defineProperty(p, 'y', {
+		get: function(){
+			return this.vertices[0].y;
+		}
+	})
+
+	Object.defineProperty(p, 'width', {
+		get: function(){
+			return this.upperBound.x - this.lowerBound.x;
+		}
+	})
+
+	Object.defineProperty(p, 'height', {
+		get: function(){
+			return this.upperBound.y - this.lowerBound.y;
+		}
+	})
+
+	AABB.compute = function(rect, matrix){
+		var aabb = new AABB(rect);
+		return aabb.compute(m);
+	}
 
 	/**
 	 * comput AABB
 	 */
-	p.compute = function(rect, m){
-		// ccw vertices arrangement
-		// 0------3
-		// |      |
-		// 1------2
-		var vertices = [];
-		vertices[0] = m.transform(new Vec2(rect.x, rect.y));
-		vertices[1] = m.transform(new Vec2(rect.left, rect.bottom));
-		vertices[2] = m.transform(new Vec2(rect.right, rect.bottom));
-		vertices[3] = m.transform(new Vec2(rect.right, rect.top));
-
-		var lowerBound = vertices[0];
+	p.compute = function(matrix){
+		var lowerBound = matrix.transform(vertices[0]);
 		var upperBound = lowerBound;
 
-		for(var i=0; i<4; ++i){
+		for(var i=1; i<4; ++i){
+			matrix.transform(vertices[i]);
 			lowerBound = Vec2.min(lowerBound, vertices[i]);
 			upperBound = Vec2.max(upperBound, vertices[i]);
 		}
 		this.lowerBound = lowerBound;
 		this.upperBound = upperBound;
-
-		updateRect(this);
 	}
 
-	p.transform = function(m){
-		// ccw vertices arrangement
-		// 0------3
-		// |      |
-		// 1------2
-		var vertices = [];
-		vertices[0] = m.transform(new Vec2(this.rect.x, this.rect.y));
-		vertices[1] = m.transform(new Vec2(this.rect.left, this.rect.bottom));
-		vertices[2] = m.transform(new Vec2(this.rect.right, this.rect.bottom));
-		vertices[3] = m.transform(new Vec2(this.rect.right, this.rect.top));
-
-		var lowerBound = vertices[0];
-		var upperBound = lowerBound;
-
-		for(var i=0; i<4; ++i){
-			lowerBound = Vec2.min(lowerBound, vertices[i]);
-			upperBound = Vec2.max(upperBound, vertices[i]);
-		}
-		this.lowerBound = lowerBound;
-		this.upperBound = upperBound;
-
-		updateRect(this);
+	AABB.merge = function(aabb1, aabb2){
+		var aabb3 = aabb1.clone();
+		return aabb3.merge(aabb2);
 	}
 
 	p.merge = function(aabb){
 		this.lowerBound = Vec2.min(this.lowerBound, aabb.lowerBound);
 		this.upperBound = Vec2.max(this.upperBound, aabb.upperBound);
+		return this;
+	}
 
-		updateRect(this);
+	p.generateRect = function(){
+		return new Rect(this.lowerBound.x, this.lowerBound.y, this.upperBound.x-this.lowerBound.x, this.upperBound.y-this.lowerBound.y);
 	}
 
 	p.clone = function(){
-		return new AABB(this.lowerBound, this.upperBound);
+		return new AABB(this.generateRect);
 	}
-
-	function updateRect(scope){
-		scope.rect.x = scope.lowerBound.x;
-		scope.rect.y = scope.lowerBound.y;
-		scope.rect.width = scope.upperBound.x-scope.lowerBound.x;
-		scope.rect.height = scope.upperBound.y-scope.lowerBound.y;
-	}
-
-
-	// // centre of the AABB
-	// Vec2<T> GetCentre() const{
-	// 	return (lowerBound + upperBound) * 0.5f;
-	// }
-
-	// // half extent of the AABB
-	// Vec2<T> GetExtents() const{
-	// 	return (upperBound - lowerBound) * 0.5f;
-	// }
-
-	// // Combine two AABB into one.
-	// void Combine(const acAABB2<T>& aabb1, const acAABB2<T>& aabb2){
-	// 	lowerBound = acMin(aabb1.lowerBound, aabb2.lowerBound);
-	// 	upperBound = acMax(aabb1.upperBound, aabb2.upperBound);
-	// }
-
-	// // Whether the AABB is contained in this
-	// bool Contains(const acAABB2<T>& aabb) const{
-	// 	return lowerBound.x <= aabb.lowerBound.x && lowerBound.y <= aabb.lowerBound.y &&
-	// 		upperBound.x >= aabb.upperBound.x && upperBound.y >= aabb.upperBound.y;
-	// }
-
-	// // Contains the point vector?
-	// // countForTouch is true, then the point on the edge will still be recognized as contained inside.
-	// bool Contains(const Vec2<T> v, bool countForTouch) const{
-	// 	if(countForTouch){
-	// 		return lowerBound.x <= v.x && lowerBound.y <= v.y && upperBound.x >= v.x && upperBound.y >= v.y;
-	// 	}
-	// 	else{
-	// 		return lowerBound.x < v.x && lowerBound.y < v.y && upperBound.x > v.x && upperBound.y > v.y;
-	// 	}
-	// }
 
 	window.AABB = AABB;
 }(window))
