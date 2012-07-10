@@ -59,7 +59,7 @@
 		},
 	})
 
-	Object.define(p, "isOnStage", {
+	Object.defineProperty(p, "isOnStage", {
 		get: function(){
 			return this.stage != null;
 		}
