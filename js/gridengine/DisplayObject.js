@@ -9,6 +9,7 @@
 	var p = DisplayObject.prototype = new GameObject();
 
 	p.init = function(){
+		this.stage = null;
 		this.visible = true;
 
 		this.parent = null;
@@ -64,6 +65,8 @@
 
 	Object.defineProperty(p, "matrix", {
 		get: function(){
+			// ensure the matrix is up to date.
+			this.updateMatrix();
 			return this._m;
 		},
 		set: function(m){
@@ -228,6 +231,11 @@
 	    var invert = this.concatedMatrix.clone().invert();
         return invert.transform(v);
 
+	}
+
+	// private method, internal use only
+	p.setStage = function(stage){
+		this.stage = stage;
 	}
 
 	window.DisplayObject = DisplayObject;

@@ -43,11 +43,39 @@
 		updateRect(this);
 	}
 
+	p.transform = function(m){
+		// ccw vertices arrangement
+		// 0------3
+		// |      |
+		// 1------2
+		var vertices = [];
+		vertices[0] = m.transform(new Vec2(this.rect.x, this.rect.y));
+		vertices[1] = m.transform(new Vec2(this.rect.left, this.rect.bottom));
+		vertices[2] = m.transform(new Vec2(this.rect.right, this.rect.bottom));
+		vertices[3] = m.transform(new Vec2(this.rect.right, this.rect.top));
+
+		var lowerBound = vertices[0];
+		var upperBound = lowerBound;
+
+		for(var i=0; i<4; ++i){
+			lowerBound = Vec2.min(lowerBound, vertices[i]);
+			upperBound = Vec2.max(upperBound, vertices[i]);
+		}
+		this.lowerBound = lowerBound;
+		this.upperBound = upperBound;
+
+		updateRect(this);
+	}
+
 	p.merge = function(aabb){
 		this.lowerBound = Vec2.min(this.lowerBound, aabb.lowerBound);
 		this.upperBound = Vec2.max(this.upperBound, aabb.upperBound);
 
 		updateRect(this);
+	}
+
+	p.clone = function(){
+		return new AABB(this.lowerBound, this.upperBound);
 	}
 
 	function updateRect(scope){

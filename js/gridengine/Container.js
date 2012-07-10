@@ -51,6 +51,7 @@
 		var removed = this._children[index];
 		delete this._children[index];
 		removed.parent = null;
+		removed.setStage = null;
 
 		// bounding box might be changed
 		this.dirtyAABB = true;
@@ -72,6 +73,13 @@
 			return this._aabb;
 		},
 	})
+
+	p.setStage = function(stage){
+		this.stage = stage;
+		for(var i=0; i<this._children.length; ++i){
+			this._children[i].setStage(stage);
+		}
+	}
 
 	window.Container = Container;
 }(window))
