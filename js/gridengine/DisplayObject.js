@@ -1,7 +1,7 @@
 (function(window){
 	/**
-	 * Abstract class
-	 */
+	* Abstract class
+	*/
 	function DisplayObject(){
 		this.klass = "DisplayObject";
 		this.init();
@@ -38,18 +38,18 @@
 		this._dirtyAABB = true;
 		this.dirtyMatrix = true;
 		this.allowAABB = false;
-	}
+	};
 
 	p.updateMatrix = function(){
 		if(this.dirtyMatrix){
 			this._m.identity();
 
 			// Notice that these convinient methods act like generating corresponding transform matrix.
-			// The new matrix will be multiply to the current matrix: 
+			// The new matrix will be multiply to the current matrix:
 			//		this._m = newMatrix * this._m.
 			// Which means, the matrix gernerated by earlier methods will be applied first, the latter matrix will be applied later.
 			// Therefore, the transform sequence shoud be:
-			// 		anchor translate  ->  scale  -> rotate  ->  position translate.
+			//		anchor translate  ->  scale  -> rotate  ->  position translate.
 			this._m.translate(-this.anchorX, -this.anchorY);//anchor translation transform
 			this._m.scale(this._scaleX, this._scaleY);// scale transform
 			this._m.rotate(this._radian);//rotation transform
@@ -57,11 +57,11 @@
 
 			this.dirtyMatrix = false;
 		}
-	}
+	};
 
 	p.draw = function(ctx){
 
-	}
+	};
 
 	Object.defineProperty(p, "matrix", {
 		get: function(){
@@ -73,25 +73,25 @@
 			this._m = m;
 
 			/**
-			 *	We assume the matrix will only contains 2D affine transformation, and only an extra Z translation, for now, ignore the translation elements
-			 *		| cos(r)*scaleX	   -sin(r)*skewX	0  |
-			 *		| sin(r)*skewY	   cos(r)*scaleY	0  |
-			 *		| 0				   0	   			1  |
-			 *
-			 *	If we apply this matrix to a point at (1.0f, 0.0f)
-			 *		x' = cos(r) * scaleX 
-			 *		y' = sin(r) * skewY
-			 *	
-			 *	The rotation then will be:
-			 *		atan2f(x', y')
-			 *	===>>
-			 *		_rotation = atan2f(_transform[1], _transform[0])
-			 *
-			 *
-			 *	Also the scale will be:
-			 *		scaleX = _transform[0] / cos(r)
-			 *		scaleY = _transform[5] / cos(r)
-			 */
+			*	We assume the matrix will only contains 2D affine transformation, and only an extra Z translation, for now, ignore the translation elements
+			*		| cos(r)*scaleX    -sin(r)*skewX	0  |
+			*		| sin(r)*skewY		cos(r)*scaleY	0  |
+			*		| 0					0				1  |
+			*
+			*	If we apply this matrix to a point at (1.0f, 0.0f)
+			*		x' = cos(r) * scaleX
+			*		y' = sin(r) * skewY
+			*
+			*	The rotation then will be:
+			*		atan2f(x', y')
+			*	===>>
+			*		_rotation = atan2f(_transform[1], _transform[0])
+			*
+			*
+			*	Also the scale will be:
+			*		scaleX = _transform[0] / cos(r)
+			*		scaleY = _transform[5] / cos(r)
+			*/
 			this.radian = Math.atan2(this._m.b, this._m.a);
 
 			var cos = Math.cos(this.radian);
@@ -104,7 +104,7 @@
 			this.dirtyAABB = true;
 			this.dirtyMatrix = true;
 		}
-	})
+	});
 
 	Object.defineProperty(p, "concatedMatrix", {
 		get: function(){
@@ -120,7 +120,7 @@
 			else
 				return this._cm;
 		}
-	})
+	});
 
 	Object.defineProperty(p, "x", {
 		get: function(){
@@ -131,7 +131,7 @@
 			this.dirtyMatrix = true;
 			this.dirtyAABB = true;
 		}
-	})
+	});
 
 	Object.defineProperty(p, "y", {
 		get: function(){
@@ -142,7 +142,7 @@
 			this.dirtyMatrix = true;
 			this.dirtyAABB = true;
 		}
-	})
+	});
 
 	Object.defineProperty(p, "scaleX", {
 		get: function(){
@@ -153,7 +153,7 @@
 			this.dirtyMatrix = true;
 			this.dirtyAABB = true;
 		}
-	})
+	});
 
 	Object.defineProperty(p, "scaleY", {
 		get: function(){
@@ -164,7 +164,7 @@
 			this.dirtyMatrix = true;
 			this.dirtyAABB = true;
 		}
-	})
+	});
 
 	Object.defineProperty(p, "radian", {
 		get: function(){
@@ -175,7 +175,7 @@
 			this.dirtyMatrix = true;
 			this.dirtyAABB = true;
 		}
-	})
+	});
 
 	Object.defineProperty(p, "anchorX", {
 		get: function(){
@@ -186,7 +186,7 @@
 			this.dirtyMatrix = true;
 			this.dirtyAABB = true;
 		}
-	})
+	});
 
 	Object.defineProperty(p, "anchorY", {
 		get: function(){
@@ -197,14 +197,14 @@
 			this.dirtyMatrix = true;
 			this.dirtyAABB = true;
 		}
-	})
+	});
 
 	Object.defineProperty(p, "aabb", {
 		get: function(){
 			// dummy getter
 			return this._aabb;
-		},
-	})
+		}
+	});
 
 	// Although this is a public property, it should be used internally.
 	Object.defineProperty(p, "dirtyAABB", {
@@ -223,20 +223,20 @@
 					this.parent.dirtyAABB = true;
 			}
 		}
-	})
+	});
 
 	p.getGlobalVec2 = function(v){
 		// var invert = this.concatedMatrix.clone().invert();
-	    // return invert.transform(v);
-	    var invert = this.concatedMatrix.clone().invert();
+		// return invert.transform(v);
+		var invert = this.concatedMatrix.clone().invert();
         return invert.transform(v);
 
-	}
+	};
 
 	// private method, internal use only
 	p.setStage = function(stage){
 		this.stage = stage;
-	}
+	};
 
 	window.DisplayObject = DisplayObject;
-}(window))
+}(window));

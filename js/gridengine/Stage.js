@@ -4,7 +4,7 @@
 		this.context = canvas.getContext('2d');
 		this.klass = "Stage";
 	}
-	var p = Stage.prototype = new Container;
+	var p = Stage.prototype = new Container();
 
 	p.draw = function(ctx){
 		// reset to identity matrix transform
@@ -20,7 +20,7 @@
 		for(var i=0; i<len; ++i){
 			this._children[i].draw(this.context);
 		}
-	}
+	};
 
 
 	p.clear = function(){
@@ -28,7 +28,7 @@
 		this.context.setTransform(1, 0, 0, 1, 0, 0);
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		this.context.restore();
-	}
+	};
 
 	window.Stage = Stage;
-}(window))
+}(window));

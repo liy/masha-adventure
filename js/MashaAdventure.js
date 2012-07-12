@@ -15,8 +15,8 @@ window.onload = function(){
 
 	this.adventure = new function(){
 		var fps = 60;
-		var interval = 1000/60
-		setInterval(mainloop, interval)
+		var interval = 1000/60;
+		setInterval(mainloop, interval);
 
 		bigContainer = new Container();
 		bigContainer.name = "BigContainer";
@@ -51,26 +51,27 @@ window.onload = function(){
 		}
 
 		canvas.addEventListener('click', bind(this, function(e){
-	        console.log("Mouse click: " + e.clientX + "," + e.clientY);
+			console.log("Mouse click: " + e.clientX + "," + e.clientY);
 
-	        // var invert = bigContainer.concatedMatrix.clone().invert();
-	        // var clickPos = invert.transform(new Vec2(e.clientX, e.clientY));
-	        var clickPos = bigContainer.getGlobalVec2(new Vec2(e.clientX, e.clientY));
-	        console.log(clickPos.x, clickPos.y);
-	        bmp.x = clickPos.x;
-	        bmp.y = clickPos.y;
 
-	    }, false));
+			// var invert = bigContainer.concatedMatrix.clone().invert();
+			// var clickPos = invert.transform(new Vec2(e.clientX, e.clientY));
+			var clickPos = bigContainer.getGlobalVec2(new Vec2(e.clientX, e.clientY));
+			console.log(clickPos.x, clickPos.y);
+			bmp.x = clickPos.x;
+			bmp.y = clickPos.y;
+
+		}, false));
 
 		enlargeComplete();
 	};
 
 	function shrinkComplete(){
-		TweenLite.to(bmp, 1, {scaleX:1, onComplete:enlargeComplete})
+		TweenLite.to(bmp, 1, {scaleX:1, onComplete:enlargeComplete});
 	}
 
 	function enlargeComplete(){
-		TweenLite.to(bmp, 1, {scaleX:2, onComplete:shrinkComplete})
+		TweenLite.to(bmp, 1, {scaleX:2, onComplete:shrinkComplete});
 	}
 
 	function mainloop(){
@@ -88,13 +89,13 @@ window.onload = function(){
 			movingBmps[i].radian += movingBmps[i].dr;
 		}
 
-		bmp.radian += 0.2
+		bmp.radian += 0.2;
 
 		stage.draw();
 
 		// for(var i=0; i<movingBmps.length; ++i){
-		// 	ctx.save();                  // Save the current state  
-		// 	ctx.fillStyle = '#00FFFF'       // Make changes to the settings 
+		// 	ctx.save();                  // Save the current state
+		// 	ctx.fillStyle = '#00FFFF'       // Make changes to the settings
 		// 	ctx.globalAlpha = 0.3;
 		// 	aabb = movingBmps[i].aabb;
 		// 	ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);

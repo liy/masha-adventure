@@ -15,26 +15,26 @@
 		
 		this.position = new Vec2();
 		this.anchorRatio = new Vec2(anchorRatioX, anchorRatioY);
-	}
+	};
 	
 	p.containsPoint = function(x, y){
 		return x >= this.left && x <= this.right && y >= this.top && y <= this.bottom;
-	}
+	};
 
 	/**
-	 * Whether the Camera contains the whole rectangle.
-	 */
+	* Whether the Camera contains the whole rectangle.
+	*/
 	p.containsRect = function(x, y, width, height){
 		return this.containsPoint(x, y) && this.containsPoint(x+width, y+height);
-	}
+	};
 
 	/**
-	 * As long as a corner of the rectangle is in the camera, it is treated as hit by
-	 * the camera
-	 */
+	* As long as a corner of the rectangle is in the camera, it is treated as hit by
+	* the camera
+	*/
 	p.hitRect = function(x, y, width, height){
 		return this.containsPoint(x, y) || this.containsPoint(x+width, y+height);
-	}
+	};
 	
 	p.resize = function(w, h){
 		this.currentWidth = w;
@@ -42,14 +42,14 @@
 		
 		scaleX = oWidth/w;
 		scaleY = oHeight/h;
-	}
+	};
 	
 	p.transform = function(go){
-		// TODO: simulate the perspective scrolling, update the x position using a 
+		// TODO: simulate the perspective scrolling, update the x position using a
 		// scale, further GameObject has smaller scale.
-		go.x = go.wx - this.position.x + this.currentWidth * this.anchorRatio.x
-		go.y = go.wy - this.position.y + this.currentHeight * this.anchorRatio.y
-	}
+		go.x = go.wx - this.position.x + this.currentWidth * this.anchorRatio.x;
+		go.y = go.wy - this.position.y + this.currentHeight * this.anchorRatio.y;
+	};
 	
 	Object.defineProperty(p, "x", {
 		set: function(value){

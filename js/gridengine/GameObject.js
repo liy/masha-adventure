@@ -12,7 +12,7 @@
 		set: function(x){
 			this._x = x;
 		}
-	})
+	});
 
 	Object.defineProperty(p, "y", {
 		get: function(){
@@ -21,7 +21,7 @@
 		set: function(y){
 			this._y = y;
 		}
-	})
+	});
 
 	window.GameObject = GameObject;
-}(window))
+}(window));

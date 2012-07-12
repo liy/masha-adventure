@@ -23,7 +23,7 @@
 		get: function(){
 			return this.width*this.height;
 		}
-	})
+	});
 
 	Object.defineProperty(p, "right", {
 		get: function(){
@@ -55,29 +55,29 @@
 			return x >= this.left && x <= this.right && y >= this.top && y <= this.bottom;
 		else
 			return x > this.left && x < this.right && y > this.top && y < this.bottom;
-	}
+	};
 
 	/**
-	 * Whether the Camera contains the whole rectangle.
-	 */
+	* Whether the Camera contains the whole rectangle.
+	*/
 	p.containsRect = function(x, y, width, height, countForTouch){
 		return this.containsPoint(x, y, countForTouch) && this.containsPoint(x+width, y+height, countForTouch);
-	}
+	};
 
 	/**
-	 * As long as a corner of the rectangle is in the camera, it is treated as hit by
-	 * the camera
-	 */
+	* As long as a corner of the rectangle is in the camera, it is treated as hit by
+	* the camera
+	*/
 	p.hitRect = function(x, y, width, height, countForTouch){
 		return this.containsPoint(x, y, countForTouch) || this.containsPoint(x+width, y+height, countForTouch);
-	}
+	};
 
 	p.clone = function(){
 		return new Rect(this.x, this.y, this.width, this.height);
-	}
+	};
 
 	p.toString = function(){
 		return "[Rect (x="+this.x+", y="+this.y+", width="+this.width+", height="+this.height+")]";
-	}
+	};
 	window.Rect = Rect;
-}(window))
+}(window));

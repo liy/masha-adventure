@@ -1,7 +1,7 @@
 /**
  * http://stackoverflow.com/questions/183214/javascript-callback-scope
  * bind function create a closure of a desired scope for the passed in function parameter.
- * 
+ *
  */
 function bind(scope, func) {
     return function () {
@@ -17,5 +17,5 @@ Function.prototype.bind = function(scope){
 	var func = this;
 	return function(){
 		return func.apply(scope, arguments);
-	}
-}
+	};
+};
