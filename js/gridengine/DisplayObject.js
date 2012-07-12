@@ -26,18 +26,15 @@
 		this._cm = new Mat3();
 
 		// TODO: Axis-aligned bounding box, for speeding up the rendering and hit test
-		this._aabb = new AABB();
+		this._localAABB = new AABB();
+		this._rootAABB = new AABB();
 
 		// The point representing the position of the GameObject
 		this._anchorX = 0;
 		this._anchorY = 0;
 
 
-		// if the bounding box is dirty, you need to re-compute it.
-		// Internally, you should use this private variable carefully, you should know what you are doing.
-		this._dirtyAABB = true;
 		this.dirtyMatrix = true;
-		this.allowAABB = false;
 	};
 
 	p.updateMatrix = function(){
@@ -108,12 +105,16 @@
 
 	Object.defineProperty(p, "concatedMatrix", {
 		get: function(){
+			// just in case the matrix applied to this object is dirty.
+			this.updateMatrix();
+
 			this._cm.a = this._m.a;
 			this._cm.b = this._m.b;
 			this._cm.c = this._m.c;
 			this._cm.d = this._m.d;
 			this._cm.tx = this._m.tx;
 			this._cm.ty = this._m.ty;
+
 			if(this.parent != null){
 				return this._cm.prependMatrix(this.parent.concatedMatrix);
 			}
@@ -199,10 +200,19 @@
 		}
 	});
 
-	Object.defineProperty(p, "aabb", {
+	Object.defineProperty(p, "localAABB", {
 		get: function(){
 			// dummy getter
-			return this._aabb;
+			return this._localAABB;
+		}
+	});
+
+	/*
+	Getter and setter
+	*/
+	Object.defineProperty(p, "rootAABB", {
+		get: function(){
+			return this._rootAABB;
 		}
 	});
 
@@ -212,16 +222,38 @@
 			// dummy getter
 			return this._aabb;
 		},
-		set: function(flag){
-			// only calculate the aabb when it is enabled.
-			if(this.allowAABB){
-				this._dirtyAABB = flag;
+		set: function(isDirty){
+			this._rootAABB.dirty = isDirty;
+			this._localAABB.dirty = isDirty;
 
-				// If this DisplayObject's bounding box become dirty, then its parent Container's bounding box MIGHT
-				// needs to be re-comput as well.
-				if(flag && this.parent != null)
-					this.parent.dirtyAABB = true;
-			}
+			// If this DisplayObject's bounding box become dirty, then its parent Container's bounding box MIGHT
+			// needs to be re-comput as well.
+			if(isDirty && this.parent != null)
+				this.parent.dirtyAABB = true;
+		}
+	});
+
+	/*
+	Getter and setter
+	*/
+	Object.defineProperty(p, "width", {
+		get: function(){
+			return this._localAABB.width;
+		},
+		set: function(width){
+			// do nothing, need implementation.
+		}
+	});
+
+	/*
+	Getter and setter
+	*/
+	Object.defineProperty(p, "height", {
+		get: function(){
+			return this._localAABB.height;
+		},
+		set: function(height){
+			// do nothing, need implementation.
 		}
 	});
 

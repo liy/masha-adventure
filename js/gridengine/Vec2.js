@@ -11,7 +11,15 @@
 			this.y = 0;
 	}
 	var p = Vec2.prototype;
-	
+
+	/*
+	Set the position of the Vector
+	*/
+	p.setPosition = function(x, y){
+		this.x = x;
+		this.y = y;
+	};
+
 	p.add = function(v){
 		this.x += v.x;
 		this.y += v.y;

@@ -74,6 +74,81 @@
 		}
 	});
 
+	/*
+	Getter and setter
+	*/
+	Object.defineProperty(p, "rootAABB", {
+		get: function(){
+			if(this._children.length !== 0){
+				this._rootAABB = this._children[0].rootAABB;
+				for (var i = 1; i < this._children.length; i++){
+					this._rootAABB.merge(this._children[i].rootAABB);
+				}
+			}
+			// finished merging, mark it clean
+			this.dirtyAABB = false;
+
+			return this._rootAABB;
+		}
+	});
+
+	/*
+	Getter and setter
+	*/
+	Object.defineProperty(p, "localAABB", {
+		get: function(){
+			if(this._children.length !== 0){
+				this._localAABB = this._children[0].rootAABB;
+				for (var i = 1; i < this._children.length; i++){
+					this._localAABB.merge(this._children[i].localAABB);
+				}
+				// After merge, the local AABB must be transformed again by this object's matrix.
+				// this._localAABB.transformBy(this.matrix);
+			}
+			
+			// finished merging, mark it clean
+			this.dirtyAABB = false;
+
+			return this._localAABB;
+		}
+	});
+
+	/*
+	Get an AABB in the targeted corodinate system
+	*/
+	p.getAABB = function(targetCoordinate){
+		var aabb = new AABB();
+		for (var i = 0; i < this._children.length; i++){
+			aabb.merge(this._children[i].getAABB(targetCoordinate));
+		}
+		aabb.transformBy(this.matrix);
+		return aabb;
+	};
+
+	/*
+	Getter and setter
+	*/
+	Object.defineProperty(p, "width", {
+		set: function(width){
+			if(this._localAABB.width !== 0){
+				var scaleX = width/this._localAABB.width;
+				this.scaleX = scaleX;
+			}
+		}
+	});
+
+	/*
+	Getter and setter
+	*/
+	Object.defineProperty(p, "height", {
+		set: function(height){
+			if(this._localAABB.height !== 0){
+				var scaleY = height/this._localAABB.height;
+				this.scaleY = scaleY;
+			}
+		}
+	});
+
 	p.setStage = function(stage){
 		this.stage = stage;
 		for(var i=0; i<this._children.length; ++i){

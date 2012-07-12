@@ -44,20 +44,41 @@
 		ctx.restore();
 	};
 
-	Object.defineProperty(p, "aabb", {
+	Object.defineProperty(p, "rootAABB", {
 		get: function(){
-			// compute aabb
-			if(this.dirtyAABB){
-				// update the matrix just in case it is dirty.
-				this.updateMatrix();
-				this._aabb.compute(this._rect, this.concatedMatrix);
-				// mark the aabb dirty to be false, so no need to comput the aabb again.
-				this.dirtyAABB = false;
-			}
+			// notice that this.matrix getter will call updateMatrix() function to ensure the matrix applied to this object is update to date.
+			this._rootAABB.compute(this._rect, this.concatedMatrix);
 
-			return this._aabb;
+			return this._rootAABB;
 		}
 	});
+
+	/*
+	Getter and setter
+	*/
+	Object.defineProperty(p, "localAABB", {
+		get: function(){
+			// notice that this.matrix getter will call updateMatrix() function to ensure the matrix applied to this object is update to date.
+			this._localAABB.compute(this._rect, this.matrix);
+
+			return this._localAABB;
+		}
+	});
+
+	/*
+	Get an AABB in the targeted corodinate system
+	*/
+	p.getAABB = function(targetCoordinate){
+		var aabb = new AABB();
+		// identity matrix applied to the rectangle.
+		aabb.compute(this._rect, new Mat3());
+		var currentObj = this;
+		while(currentObj != targetCoordinate){
+			aabb.transformBy(currentObj.matrix);
+			currentObj = currentObj.parent;
+		}
+		return aabb;
+	};
 
 	Object.defineProperty(p, "isOnStage", {
 		get: function(){

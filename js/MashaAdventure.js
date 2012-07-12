@@ -20,11 +20,13 @@ window.onload = function(){
 
 		bigContainer = new Container();
 		bigContainer.name = "BigContainer";
-		bigContainer.x = 50;
-		bigContainer.y = 50;
+		// bigContainer.x = 25;
+		// bigContainer.y = 32;
 		stage.addChild(bigContainer);
 
 		container = new Container();
+		// container.x = 100;
+		// container.y = 100;
 		container.name = "Sub Container";
 		bigContainer.addChild(container);
 
@@ -35,7 +37,7 @@ window.onload = function(){
 		container.addChild(bmp);
 		bmp.radian = Math.PI/4;
 
-		for(var i=0; i<1000; ++i){
+		for(var i=0; i<10; ++i){
 			var b = new Bitmap('img/rails.png');
 			if(Math.random() < 0.8){
 				b.anchorX = 25;
@@ -43,7 +45,7 @@ window.onload = function(){
 			}
 			b.scaleX = b.scaleY = 0.2;
 			b.dr = Math.random()*0.2;
-			b.x = b.tx = Math.random()*500;
+			b.x = b.tx = Math.random()*300;
 			b.y = b.ty = Math.random()*300;
 			b.dm = Math.random()*10 + 5;
 			movingBmps.push(b);
@@ -75,12 +77,15 @@ window.onload = function(){
 	}
 
 	function mainloop(){
+
+		container.scaleY = 1/2;
+
 		var ctx = stage.context;
 
 		for(var i=0; i<movingBmps.length; ++i){
 			if(Math.abs(movingBmps[i].tx - movingBmps[i].x) < 0.3 && Math.abs(movingBmps[i].ty - movingBmps[i].y) < 0.3){
-				movingBmps[i].tx = Math.random()*500*Math.random();
-				movingBmps[i].ty = Math.random()*300*Math.random();
+				movingBmps[i].tx = Math.random()*500*Math.random() + 50;
+				movingBmps[i].ty = Math.random()*300*Math.random() + 50;
 			}
 			else{
 				movingBmps[i].x += (movingBmps[i].tx - movingBmps[i].x)/movingBmps[i].dm;
@@ -89,27 +94,29 @@ window.onload = function(){
 			movingBmps[i].radian += movingBmps[i].dr;
 		}
 
-		bmp.radian += 0.2;
+		bmp.radian += 0.01;
 
 		stage.draw();
 
-		// for(var i=0; i<movingBmps.length; ++i){
-		// 	ctx.save();                  // Save the current state
-		// 	ctx.fillStyle = '#00FFFF'       // Make changes to the settings
-		// 	ctx.globalAlpha = 0.3;
-		// 	aabb = movingBmps[i].aabb;
-		// 	ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
-		// 	ctx.restore();
-		// }
+		for(var i=0; i<movingBmps.length; ++i){
+			ctx.save();                  // Save the current state
+			ctx.fillStyle = '#00FFFF'       // Make changes to the settings
+			ctx.globalAlpha = 0.8;
+			aabb = movingBmps[i].rootAABB;
+			ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
+			ctx.restore();
+		}
 
 		
-		// ctx.setTransform(1, 0, 0, 1, 0, 0);
-		// ctx.save();                  // Save the current state  
-		// ctx.fillStyle = '#FF0000'       // Make changes to the settings 
-		// ctx.globalAlpha = 0.5;
-		// var aabb = container.aabb;
-		// ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
-		// ctx.restore();
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.save();                  // Save the current state  
+		ctx.fillStyle = '#FF0000'       // Make changes to the settings 
+		ctx.globalAlpha = 0.2;
+		var aabb = container.rootAABB;
+		ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
+		// console.log(aabb.generateRect().toString())
+		ctx.restore();
+
 
 		// ctx.save();                  // Save the current state  
 		// ctx.fillStyle = '#00FF00'       // Make changes to the settings 
