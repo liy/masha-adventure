@@ -51,21 +51,10 @@
 		get: function(){
 			// notice that this.matrix getter will call updateMatrix() function to ensure the matrix applied to this object is update to date.
 			this._aabb.compute(this._rect, this.matrix);
+			// Since AABB instance just finished computing, it is set to be clean in order to reduce the computation cost.
+			this._aabb.isDirty = false;
 
 			return this._aabb;
-		}
-	});
-
-	/*
-	Getter and setter
-	*/
-	Object.defineProperty(p, "cleanAABB", {
-		get: function(){
-			var clean = new AABB();
-			// notice that this.matrix getter will call updateMatrix() function to ensure the matrix applied to this object is update to date.
-			clean.compute(this._rect, new Mat3());
-
-			return clean;
 		}
 	});
 

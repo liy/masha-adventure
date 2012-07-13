@@ -31,12 +31,12 @@
 		this._anchorX = 0;
 		this._anchorY = 0;
 
-
+		// Whether the local transform matrix is dirty or not. If it is clean, updateMatrix() method will do nothing in order to reduce computation cost.
 		this.dirtyMatrix = true;
 	};
 
 	p.updateMatrix = function(){
-		// if(this.dirtyMatrix){
+		if(this.dirtyMatrix){
 			this._m.identity();
 
 			// Notice that these convinient methods act like generating corresponding transform matrix.
@@ -51,11 +51,11 @@
 			this._m.translate(this._x, this._y);//normal position translation transform
 
 			this.dirtyMatrix = false;
-		// }
+		}
 	};
 
 	p.draw = function(ctx){
-
+		// not implemented.
 	};
 
 	Object.defineProperty(p, "matrix", {
@@ -64,10 +64,13 @@
 			this.updateMatrix();
 			return this._m;
 		},
+		// TODO: needs further improvment
 		set: function(m){
 			this._m = m;
 
 			/**
+			* Naive decompose process.
+			*
 			*	We assume the matrix will only contains 2D affine transformation, and only an extra Z translation, for now, ignore the translation elements
 			*		| cos(r)*scaleX    -sin(r)*skewX	0  |
 			*		| sin(r)*skewY		cos(r)*scaleY	0  |
@@ -102,7 +105,7 @@
 	});
 
 	/*
-	
+	Concatenate all its parents matrix into one. This matrix can be used for producing local to global position.
 	*/
 	Object.defineProperty(p, "concatedMatrix", {
 		get: function(){
@@ -208,10 +211,11 @@
 	Object.defineProperty(p, "dirtyAABB", {
 		get: function(){
 			// dummy getter
-			return this._aabb;
+			return this._aabb.isDirty;
 		},
 		set: function(isDirty){
-			this._aabb.dirty = isDirty;
+			// mark the AABB to be the specific value.
+			this._aabb.isDirty = isDirty;
 
 			// If this DisplayObject's bounding box become dirty, then its parent Container's bounding box MIGHT
 			// needs to be re-comput as well.
@@ -225,7 +229,7 @@
 	*/
 	Object.defineProperty(p, "width", {
 		get: function(){
-			return this._aabb.width;
+			return this.aabb.width;
 		},
 		set: function(width){
 			// do nothing, need implementation.
@@ -237,7 +241,7 @@
 	*/
 	Object.defineProperty(p, "height", {
 		get: function(){
-			return this._aabb.height;
+			return this.aabb.height;
 		},
 		set: function(height){
 			// do nothing, need implementation.

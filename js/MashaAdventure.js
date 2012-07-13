@@ -14,14 +14,15 @@ window.onload = function(){
 	var movingBmps = [];
 
 	this.adventure = new function(){
-		// var fps = 5;
-		// var interval = 1000/60;
-		setInterval(mainloop, 1000);
+		var fps = 60;
+		var interval = 1000/fps;
+		setInterval(mainloop, interval);
 
 		container = new Container();
 		container.x = 200;
 		container.y = 200;
 		container.radian = -Math.PI/4;
+		container.scaleX = 1/2;
 		container.name = "Sub Container";
 		stage.addChild(container);
 
@@ -31,31 +32,33 @@ window.onload = function(){
 		//bmp.anchorY = 32;
 		bmp.x = 0;
 		bmp.y = 0;
+		bmp.radian = Math.PI/6;
 		container.addChild(bmp);
 
 		for(var i=0; i<1; ++i){
 			var b = new Bitmap('img/rails.png');
-			b.x = 50;
-			b.y = 64;
-			//b.dm = Math.random()*10 + 5;
+			b.x = b.tx = Math.random()*300//50;
+			b.y = b.ty = Math.random()*300//64;
+			b.dm = Math.random()*10 + 5;
+			b.dr = 0.05*Math.random() - 0.03;
 			movingBmps.push(b);
 			container.addChild(b);
 		}
 
-		// canvas.addEventListener('click', bind(this, function(e){
-		// 	console.log("Mouse click: " + e.clientX + "," + e.clientY);
+		canvas.addEventListener('click', bind(this, function(e){
+			console.log("Mouse click: " + e.clientX + "," + e.clientY);
 
 
-		// 	// var invert = bigContainer.concatedMatrix.clone().invert();
-		// 	// var clickPos = invert.transform(new Vec2(e.clientX, e.clientY));
-		// 	//var clickPos = bigContainer.getGlobalVec2(new Vec2(e.clientX, e.clientY));
-		// 	//console.log(clickPos.x, clickPos.y);
-		// 	//bmp.x = clickPos.x;
-		// 	//bmp.y = clickPos.y;
+			// var invert = bigContainer.concatedMatrix.clone().invert();
+			// var clickPos = invert.transform(new Vec2(e.clientX, e.clientY));
+			var clickPos = container.getGlobalVec2(new Vec2(e.clientX, e.clientY));
+			//console.log(clickPos.x, clickPos.y);
+			bmp.x = clickPos.x;
+			bmp.y = clickPos.y;
 
-		// }, false));
+		}, false));
 
-		//enlargeComplete();
+		// enlargeComplete();
 	};
 
 	function shrinkComplete(){
@@ -72,19 +75,19 @@ window.onload = function(){
 		var ctx = stage.context;
 		var i;
 
-		// for(i=0; i<movingBmps.length; ++i){
-		// 	if(Math.abs(movingBmps[i].tx - movingBmps[i].x) < 0.3 && Math.abs(movingBmps[i].ty - movingBmps[i].y) < 0.3){
-		// 		movingBmps[i].tx = Math.random()*500*Math.random() + 50;
-		// 		movingBmps[i].ty = Math.random()*300*Math.random() + 50;
-		// 	}
-		// 	else{
-		// 		movingBmps[i].x += (movingBmps[i].tx - movingBmps[i].x)/movingBmps[i].dm;
-		// 		movingBmps[i].y += (movingBmps[i].ty - movingBmps[i].y)/movingBmps[i].dm;
-		// 	}
-		// 	movingBmps[i].radian += movingBmps[i].dr;
-		// }
+		for(i=0; i<movingBmps.length; ++i){
+			if(Math.abs(movingBmps[i].tx - movingBmps[i].x) < 0.3 && Math.abs(movingBmps[i].ty - movingBmps[i].y) < 0.3){
+				movingBmps[i].tx = Math.random()*500*Math.random() + 50;
+				movingBmps[i].ty = Math.random()*300*Math.random() + 50;
+			}
+			else{
+				movingBmps[i].x += (movingBmps[i].tx - movingBmps[i].x)/movingBmps[i].dm;
+				movingBmps[i].y += (movingBmps[i].ty - movingBmps[i].y)/movingBmps[i].dm;
+			}
+			movingBmps[i].radian += movingBmps[i].dr;
+		}
 
-		//bmp.radian += 0.01;
+		bmp.radian += 0.01;
 		
 		stage.draw();
 
@@ -98,10 +101,19 @@ window.onload = function(){
 		}
 
 
+		// console.log(container.width);
+
 		ctx.save();		// Save the current state
 		ctx.fillStyle = '#FF0000';		// Make changes to the settings
 		ctx.globalAlpha = 0.2;
-		var aabb = container.getAABB(stage);
+		var aabb = container.aabb;
+		ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
+		ctx.restore();
+
+		ctx.save();		// Save the current state
+		ctx.fillStyle = '#00CC00';		// Make changes to the settings
+		ctx.globalAlpha = 0.4;
+		var aabb = bmp.getAABB(this.stage);
 		ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
 		ctx.restore();
 	}

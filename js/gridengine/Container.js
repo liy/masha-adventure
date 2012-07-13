@@ -61,18 +61,21 @@
 
 	Object.defineProperty(p, "aabb", {
 		get: function(){
-			if(this.dirtyAABB){
+			// if(this._aabb.isDirty){
 				// simply merge all the AABB will produce the container's AABB.
 				if(this._children.length !== 0){
-					this._aabb = this._children[0].aabb.clone();
-					for(var i=1; i<this._children.length; ++i){
-						this._aabb.merge(this._children[i].aabb);
-					}
-					this.dirtyAABB = false;
+					this._aabb = this._children[0].aabb.clone().transformBy(this.matrix);
 
-					this._aabb.transformBy(this.matrix);
+					// this._aabb = this._children[0].getAABB(this.parent);
+					// this._aabb = this._children[0].getAABB(this).transformBy(this.matrix);
+					for(var i=1; i<this._children.length; ++i){
+						this._aabb.merge(this._children[i].aabb.clone().transformBy(this.matrix));
+						// this._aabb.merge(this._children[i].getAABB(this.parent));
+						// this._aabb.merge(this._children[i].getAABB(this).transformBy(this.matrix));
+					}
 				}
-			}
+				this.dirtyAABB = false;
+			// }
 			return this._aabb;
 		}
 	});
@@ -96,9 +99,13 @@
 	Getter and setter
 	*/
 	Object.defineProperty(p, "width", {
+		get: function(){
+			return this.aabb.width;
+		},
 		set: function(width){
-			if(this._aabb.width !== 0){
-				var scaleX = width/this._aabb.width;
+			var aabb = this.aabb;
+			if(aabb.width !== 0){
+				var scaleX = width/aabb.width;
 				this.scaleX = scaleX;
 			}
 		}
@@ -108,9 +115,13 @@
 	Getter and setter
 	*/
 	Object.defineProperty(p, "height", {
+		get: function(){
+			return this.aabb.height;
+		},
 		set: function(height){
-			if(this._aabb.height !== 0){
-				var scaleY = height/this._aabb.height;
+			var aabb = this.aabb;
+			if(aabb.height !== 0){
+				var scaleY = height/aabb.height;
 				this.scaleY = scaleY;
 			}
 		}

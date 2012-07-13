@@ -27,7 +27,6 @@
 	p.identity = function(){
 		this.a =  this.d = 1;
 		this.b = this.c = this.tx = this.ty = 0;
-
 		return this;
 	};
 
@@ -121,14 +120,13 @@
 		this.b = sin*a + cos*this.b;
 		this.c = cos*c - sin*this.d;
 		this.d = sin*c + cos*this.d;
-
 		this.tx = cos*tx - sin*this.ty;
 		this.ty = sin*tx + cos*this.ty;
 
 		return this;
 	};
 
-	// TODO: polish the transform method, should it be in the Mat3 class or Vec2 class
+	// TODO: The transform method, should it be in the Mat3 class or Vec2 class
 	/**
 	* transform the Vec2 instance.
     * | a    c    tx |       | x |
@@ -153,10 +151,16 @@
 		}
 	});
 
+	/*
+	Clone the matrix
+	*/
 	p.clone = function(){
 		return new Mat3(this.a, this.b, this.c, this.d, this.tx, this.ty);
 	};
 
+	/*
+	Get string
+	*/
 	p.toString = function(){
 		return "[Mat3 (a="+this.a+", b="+this.b+", c="+this.c+", d="+this.d+", tx="+this.tx+", ty="+this.ty+")]";
 	};
