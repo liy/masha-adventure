@@ -178,7 +178,8 @@
 	*
 	*/
 	p.toString = function(){
-		return "[x: " + this.x + ", y: " + this.y + "], length: " + this.len;
+		// return "[x: " + this.x + ", y: " + this.y + "], length: " + this.len;
+		return "[x: " + this.x + ", y: " + this.y + "]";
 	};
 	
 	// utils functions

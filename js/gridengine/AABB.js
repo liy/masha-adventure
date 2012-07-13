@@ -50,7 +50,7 @@
 	* comput AABB
 	*/
 	p.compute = function(rect, matrix){
-		if(this.dirty){
+		// if(this.dirty){
 			// ccw vertices arrangement
 			// 0------3
 			// |      |
@@ -65,15 +65,15 @@
 			var upperBound = lowerBound;
 
 			for(var i=1; i<4; ++i){
-				matrix.transform(this.vertices[i]);
-				lowerBound = Vec2.min(lowerBound, this.vertices[i]);
-				upperBound = Vec2.max(upperBound, this.vertices[i]);
+				var v = matrix.transform(this.vertices[i]);
+				lowerBound = Vec2.min(lowerBound, v);
+				upperBound = Vec2.max(upperBound, v);
 			}
 			this.lowerBound = lowerBound;
 			this.upperBound = upperBound;
 
 			this.dirty = false;
-		}
+		// }
 	};
 
 	/*
@@ -84,12 +84,14 @@
 		var upperBound = lowerBound;
 
 		for(var i=1; i<4; ++i){
-			matrix.transform(this.vertices[i]);
-			lowerBound = Vec2.min(lowerBound, this.vertices[i]);
-			upperBound = Vec2.max(upperBound, this.vertices[i]);
+			var v = matrix.transform(this.vertices[i]);
+			lowerBound = Vec2.min(lowerBound, v);
+			upperBound = Vec2.max(upperBound, v);
 		}
 		this.lowerBound = lowerBound;
 		this.upperBound = upperBound;
+
+		return this;
 	};
 
 	AABB.merge = function(aabb1, aabb2){
@@ -100,6 +102,13 @@
 	p.merge = function(aabb){
 		this.lowerBound = Vec2.min(this.lowerBound, aabb.lowerBound);
 		this.upperBound = Vec2.max(this.upperBound, aabb.upperBound);
+
+		// update vertices.
+		this.vertices[0].setPosition(this.lowerBound.x, this.lowerBound.y);
+		this.vertices[1].setPosition(this.lowerBound.x, this.upperBound.y);
+		this.vertices[2].setPosition(this.upperBound.x, this.upperBound.y);
+		this.vertices[3].setPosition(this.upperBound.x, this.lowerBound.y);
+
 		return this;
 	};
 
@@ -108,7 +117,10 @@
 	};
 
 	p.clone = function(){
-		return new AABB(this.generateRect);
+		var aabb = new AABB();
+		aabb.lowerBound = this.lowerBound.clone();
+		aabb.upperBound = this.upperBound.clone();
+		return aabb;
 	};
 
 	window.AABB = AABB;

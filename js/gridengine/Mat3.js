@@ -1,11 +1,11 @@
 (function(window){
 
 	/**
-	 * Column major 3x3 matrix
-	 * | a	 c   tx |
-	 * | b   d   ty |
-	 * | 0   0   1  |
-	 */
+	* Column major 3x3 matrix
+	* | a	c   tx |
+	* | b   d   ty |
+	* | 0   0   1  |
+	*/
 	function Mat3(a, b, c, d, tx, ty){
 		this.init(a, b, c, d, tx, ty);
 	}
@@ -31,12 +31,43 @@
 		return this;
 	};
 
-	/**
-	* | a1   c1   tx1 |       | a2   c2   tx2 |
-	* | b1   d1   ty1 |   *   | b2   d2   ty2 |
-	* | 0    0    1   |       | 0    0    1   |
+	/*
+	Matrix multiplication, update the matrix instance. The parameter matrix is LEFT operand.
+	| a2   c2   tx2 |       | a1   c1   tx1 |
+	| b2   d2   ty2 |   *   | b1   d1   ty1 |
+	| 0    0    1   |       | 0    0    1   |
+	matrix 1 represents this matrix instance, matrix 2 is the parameter matrix
 	*/
-	p.multiply = function(m){
+	p.multiplyLeft = function(m){
+		if(m.isIdentity)
+			return this;
+
+		var a1 = this.a;
+		var b1 = this.b;
+		var c1 = this.c;
+		var tx = this.tx;
+
+		this.a = m.a*a1 + m.c*b1;
+		this.b = m.b*a1 + m.d*b1;
+		this.c = m.a*c1 + m.c*this.d;
+		this.d = m.b*c1 + m.d*this.d;
+		this.tx = m.a*tx + m.c*this.ty + m.tx;
+		this.ty = m.b*tx + m.d*this.ty + m.ty;
+
+		return this;
+	};
+
+	/*
+	Matrix multiplication, update the matrix instance. The parameter matrix is RIGHT operand.
+	| a1   c1   tx1 |       | a2   c2   tx2 |
+	| b1   d1   ty1 |   *   | b2   d2   ty2 |
+	| 0    0    1   |       | 0    0    1   |
+	matrix 1 represents this matrix instance, matrix 2 is the parameter matrix
+	*/
+	p.multiplyRight = function(m){
+		if(m.isIdentity)
+			return this;
+
 		var a1 = this.a;
 		var b1 = this.b;
 		var c1 = this.c;
@@ -113,6 +144,15 @@
 		return v;
 	};
 
+	/*
+	Getter and setter
+	*/
+	Object.defineProperty(p, "isIdentity", {
+		get: function(){
+			return this.a===1 && this.b===0 && this.c===0 && this.d===1 && this.tx===0 && this.ty===0;
+		}
+	});
+
 	p.clone = function(){
 		return new Mat3(this.a, this.b, this.c, this.d, this.tx, this.ty);
 	};
@@ -153,78 +193,7 @@
 
 
 
-	/**
-	* Concatenates the specified matrix properties with this matrix. All parameters are required.
-	* @method prepend
-	* @param {Number} a
-	* @param {Number} b
-	* @param {Number} c
-	* @param {Number} d
-	* @param {Number} tx
-	* @param {Number} ty
-	* @return {Matrix2D} This matrix. Useful for chaining method calls.
-	**/
-	p.prepend = function(a, b, c, d, tx, ty) {
-		var tx1 = this.tx;
-		if (a !== 1 || b !== 0 || c !== 0 || d !== 1) {
-			var a1 = this.a;
-			var c1 = this.c;
-			this.a  = a1*a+this.b*c;
-			this.b  = a1*b+this.b*d;
-			this.c  = c1*a+this.d*c;
-			this.d  = c1*b+this.d*d;
-		}
-		this.tx = tx1*a+this.ty*c+tx;
-		this.ty = tx1*b+this.ty*d+ty;
-		return this;
-	};
 
-	/**
-	* Appends the specified matrix properties with this matrix. All parameters are required.
-	* @method append
-	* @param {Number} a
-	* @param {Number} b
-	* @param {Number} c
-	* @param {Number} d
-	* @param {Number} tx
-	* @param {Number} ty
-	* @return {Matrix2D} This matrix. Useful for chaining method calls.
-	**/
-	p.append = function(a, b, c, d, tx, ty) {
-		var a1 = this.a;
-		var b1 = this.b;
-		var c1 = this.c;
-		var d1 = this.d;
-
-		this.a  = a*a1+b*c1;
-		this.b  = a*b1+b*d1;
-		this.c  = c*a1+d*c1;
-		this.d  = c*b1+d*d1;
-		this.tx = tx*a1+ty*c1+this.tx;
-		this.ty = tx*b1+ty*d1+this.ty;
-		return this;
-	};
-
-	/**
-	* Prepends the specified matrix with this matrix.
-	* @method prependMatrix
-	* @param {Matrix2D} matrix
-	**/
-	p.prependMatrix = function(matrix) {
-		this.prepend(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
-		return this;
-	};
-
-	/**
-	* Appends the specified matrix with this matrix.
-	* @method appendMatrix
-	* @param {Matrix2D} matrix
-	* @return {Matrix2D} This matrix. Useful for chaining method calls.
-	**/
-	p.appendMatrix = function(matrix) {
-		this.append(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
-		return this;
-	};
 
 	window.Mat3 = Mat3;
 }(window));

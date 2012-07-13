@@ -44,24 +44,28 @@
 		ctx.restore();
 	};
 
-	Object.defineProperty(p, "rootAABB", {
+	/*
+	Getter and setter
+	*/
+	Object.defineProperty(p, "aabb", {
 		get: function(){
 			// notice that this.matrix getter will call updateMatrix() function to ensure the matrix applied to this object is update to date.
-			this._rootAABB.compute(this._rect, this.concatedMatrix);
+			this._aabb.compute(this._rect, this.matrix);
 
-			return this._rootAABB;
+			return this._aabb;
 		}
 	});
 
 	/*
 	Getter and setter
 	*/
-	Object.defineProperty(p, "localAABB", {
+	Object.defineProperty(p, "cleanAABB", {
 		get: function(){
+			var clean = new AABB();
 			// notice that this.matrix getter will call updateMatrix() function to ensure the matrix applied to this object is update to date.
-			this._localAABB.compute(this._rect, this.matrix);
+			clean.compute(this._rect, new Mat3());
 
-			return this._localAABB;
+			return clean;
 		}
 	});
 
