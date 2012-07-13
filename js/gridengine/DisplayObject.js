@@ -23,11 +23,9 @@
 
 		// 2d affine transform matrix, internal use only.
 		this._m = new Mat3();
-		this._cm = new Mat3();
 
 		// TODO: Axis-aligned bounding box, for speeding up the rendering and hit test
-		this._localAABB = new AABB();
-		this._rootAABB = new AABB();
+		this._aabb = new AABB();
 
 		// The point representing the position of the GameObject
 		this._anchorX = 0;
@@ -38,7 +36,7 @@
 	};
 
 	p.updateMatrix = function(){
-		if(this.dirtyMatrix){
+		// if(this.dirtyMatrix){
 			this._m.identity();
 
 			// Notice that these convinient methods act like generating corresponding transform matrix.
@@ -53,7 +51,7 @@
 			this._m.translate(this._x, this._y);//normal position translation transform
 
 			this.dirtyMatrix = false;
-		}
+		// }
 	};
 
 	p.draw = function(ctx){
@@ -103,23 +101,22 @@
 		}
 	});
 
+	/*
+	
+	*/
 	Object.defineProperty(p, "concatedMatrix", {
 		get: function(){
 			// just in case the matrix applied to this object is dirty.
 			this.updateMatrix();
 
-			this._cm.a = this._m.a;
-			this._cm.b = this._m.b;
-			this._cm.c = this._m.c;
-			this._cm.d = this._m.d;
-			this._cm.tx = this._m.tx;
-			this._cm.ty = this._m.ty;
+			// TODO: Might want to put the concatenated matrix variable back.
+			var m = new Mat3(this._m.a, this._m.b, this._m.c, this._m.d, this._m.tx, this._m.ty);
 
 			if(this.parent != null){
-				return this._cm.prependMatrix(this.parent.concatedMatrix);
+				return m.multiplyLeft(this.parent.concatedMatrix);
 			}
 			else
-				return this._cm;
+				return m;
 		}
 	});
 
@@ -200,19 +197,10 @@
 		}
 	});
 
-	Object.defineProperty(p, "localAABB", {
+	Object.defineProperty(p, "aabb", {
 		get: function(){
 			// dummy getter
-			return this._localAABB;
-		}
-	});
-
-	/*
-	Getter and setter
-	*/
-	Object.defineProperty(p, "rootAABB", {
-		get: function(){
-			return this._rootAABB;
+			return this._aabb;
 		}
 	});
 
@@ -223,8 +211,7 @@
 			return this._aabb;
 		},
 		set: function(isDirty){
-			this._rootAABB.dirty = isDirty;
-			this._localAABB.dirty = isDirty;
+			this._aabb.dirty = isDirty;
 
 			// If this DisplayObject's bounding box become dirty, then its parent Container's bounding box MIGHT
 			// needs to be re-comput as well.
@@ -238,7 +225,7 @@
 	*/
 	Object.defineProperty(p, "width", {
 		get: function(){
-			return this._localAABB.width;
+			return this._aabb.width;
 		},
 		set: function(width){
 			// do nothing, need implementation.
@@ -250,7 +237,7 @@
 	*/
 	Object.defineProperty(p, "height", {
 		get: function(){
-			return this._localAABB.height;
+			return this._aabb.height;
 		},
 		set: function(height){
 			// do nothing, need implementation.
@@ -260,7 +247,7 @@
 	p.getGlobalVec2 = function(v){
 		// var invert = this.concatedMatrix.clone().invert();
 		// return invert.transform(v);
-		var invert = this.concatedMatrix.clone().invert();
+		var invert = this.concatedMatrix.invert();
         return invert.transform(v);
 
 	};
