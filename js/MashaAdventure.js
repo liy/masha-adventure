@@ -78,14 +78,14 @@ window.onload = function(){
 
 	function mainloop(){
 
-		container.scaleY = 1/2;
+		// container.scaleY = container.scaleX = 1/2;
 
 		var ctx = stage.context;
 
 		for(var i=0; i<movingBmps.length; ++i){
 			if(Math.abs(movingBmps[i].tx - movingBmps[i].x) < 0.3 && Math.abs(movingBmps[i].ty - movingBmps[i].y) < 0.3){
-				movingBmps[i].tx = Math.random()*500*Math.random() + 50;
-				movingBmps[i].ty = Math.random()*300*Math.random() + 50;
+				movingBmps[i].tx = Math.random()*500 + 50;
+				movingBmps[i].ty = Math.random()*300 + 50;
 			}
 			else{
 				movingBmps[i].x += (movingBmps[i].tx - movingBmps[i].x)/movingBmps[i].dm;

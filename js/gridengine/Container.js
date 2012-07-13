@@ -103,7 +103,7 @@
 					this._localAABB.merge(this._children[i].localAABB);
 				}
 				// After merge, the local AABB must be transformed again by this object's matrix.
-				// this._localAABB.transformBy(this.matrix);
+				this._localAABB.transformBy(this.matrix);
 			}
 			
 			// finished merging, mark it clean
