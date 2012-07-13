@@ -51,6 +51,7 @@
 	NOT perform the computation.
 	*/
 	p.compute = function(rect, matrix){
+			// console.log("compute: " + this.isDirty);
 		// TODO: Maybe put this check outside of this class, or even take this.isDirty out of this class?
 		if(this.isDirty){
 			// ccw vertices arrangement

@@ -65,7 +65,6 @@
 				// simply merge all the AABB will produce the container's AABB.
 				if(this._children.length !== 0){
 					this._aabb = this._children[0].aabb.clone().transformBy(this.matrix);
-
 					// this._aabb = this._children[0].getAABB(this.parent);
 					// this._aabb = this._children[0].getAABB(this).transformBy(this.matrix);
 					for(var i=1; i<this._children.length; ++i){

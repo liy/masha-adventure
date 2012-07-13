@@ -71,23 +71,24 @@ window.onload = function(){
 
 	function mainloop(){
 		// container.scaleY = 1/2;
+		// container.radian += 0.1;
 
 		var ctx = stage.context;
 		var i;
 
-		for(i=0; i<movingBmps.length; ++i){
-			if(Math.abs(movingBmps[i].tx - movingBmps[i].x) < 0.3 && Math.abs(movingBmps[i].ty - movingBmps[i].y) < 0.3){
-				movingBmps[i].tx = Math.random()*500*Math.random() + 50;
-				movingBmps[i].ty = Math.random()*300*Math.random() + 50;
-			}
-			else{
-				movingBmps[i].x += (movingBmps[i].tx - movingBmps[i].x)/movingBmps[i].dm;
-				movingBmps[i].y += (movingBmps[i].ty - movingBmps[i].y)/movingBmps[i].dm;
-			}
-			movingBmps[i].radian += movingBmps[i].dr;
-		}
+		// for(i=0; i<movingBmps.length; ++i){
+		// 	if(Math.abs(movingBmps[i].tx - movingBmps[i].x) < 0.3 && Math.abs(movingBmps[i].ty - movingBmps[i].y) < 0.3){
+		// 		movingBmps[i].tx = Math.random()*500*Math.random() + 50;
+		// 		movingBmps[i].ty = Math.random()*300*Math.random() + 50;
+		// 	}
+		// 	else{
+		// 		movingBmps[i].x += (movingBmps[i].tx - movingBmps[i].x)/movingBmps[i].dm;
+		// 		movingBmps[i].y += (movingBmps[i].ty - movingBmps[i].y)/movingBmps[i].dm;
+		// 	}
+		// 	movingBmps[i].radian += movingBmps[i].dr;
+		// }
 
-		bmp.radian += 0.01;
+		// bmp.radian += 0.01;
 		
 		stage.draw();
 
