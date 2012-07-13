@@ -89,14 +89,14 @@ window.onload = function(){
 
 		stage.draw();
 
-		// for(i=0; i<movingBmps.length; ++i){
-		// 	ctx.save();                  // Save the current state
-		// 	ctx.fillStyle = '#00FFFF';       // Make changes to the settings
-		// 	ctx.globalAlpha = 0.8;
-		// 	aabb = movingBmps[i].aabb;
-		// 	ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
-		// 	ctx.restore();
-		// }
+		for(i=0; i<movingBmps.length; ++i){
+			ctx.save();                  // Save the current state
+			ctx.fillStyle = '#00FFFF';       // Make changes to the settings
+			ctx.globalAlpha = 0.8;
+			aabb = movingBmps[i].getAABB(this.stage);
+			ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
+			ctx.restore();
+		}
 
 
 		ctx.save();		// Save the current state

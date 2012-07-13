@@ -61,7 +61,7 @@
 
 	Object.defineProperty(p, "aabb", {
 		get: function(){
-			// if(this.dirtyAABB){
+			if(this.dirtyAABB){
 				// simply merge all the AABB will produce the container's AABB.
 				if(this._children.length !== 0){
 					this._aabb = this._children[0].aabb.clone();
@@ -72,7 +72,7 @@
 
 					this._aabb.transformBy(this.matrix);
 				}
-			// }
+			}
 			return this._aabb;
 		}
 	});
