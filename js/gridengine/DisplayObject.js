@@ -203,7 +203,7 @@
 	Object.defineProperty(p, "aabb", {
 		get: function(){
 			// dummy getter
-			return this._aabb;
+			return this._aabb.clone();
 		}
 	});
 
@@ -216,6 +216,8 @@
 		set: function(isDirty){
 			// mark the AABB to be the specific value.
 			this._aabb.isDirty = isDirty;
+
+			console.log("set dirty: " + isDirty)
 
 			// If this DisplayObject's bounding box become dirty, then its parent Container's bounding box MIGHT
 			// needs to be re-comput as well.

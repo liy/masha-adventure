@@ -19,8 +19,8 @@ window.onload = function(){
 		setInterval(mainloop, interval);
 
 		container = new Container();
-		container.x = 200;
-		container.y = 200;
+		container.x = 10;
+		container.y = 10;
 		container.radian = -Math.PI/4;
 		container.scaleX = 1/2;
 		container.name = "Sub Container";
@@ -32,7 +32,7 @@ window.onload = function(){
 		//bmp.anchorY = 32;
 		bmp.x = 0;
 		bmp.y = 0;
-		bmp.radian = Math.PI/6;
+		// bmp.scaleX = 2;
 		container.addChild(bmp);
 
 		for(var i=0; i<1; ++i){
@@ -70,11 +70,10 @@ window.onload = function(){
 	}
 
 	function mainloop(){
-		// container.scaleY = 1/2;
-		// container.radian += 0.1;
-
 		var ctx = stage.context;
 		var i;
+
+		// bmp.radian += 0.1;
 
 		// for(i=0; i<movingBmps.length; ++i){
 		// 	if(Math.abs(movingBmps[i].tx - movingBmps[i].x) < 0.3 && Math.abs(movingBmps[i].ty - movingBmps[i].y) < 0.3){
@@ -87,23 +86,24 @@ window.onload = function(){
 		// 	}
 		// 	movingBmps[i].radian += movingBmps[i].dr;
 		// }
-
-		// bmp.radian += 0.01;
 		
 		stage.draw();
 
-		for(i=0; i<movingBmps.length; ++i){
-			ctx.save();                  // Save the current state
-			ctx.fillStyle = '#00FFFF';       // Make changes to the settings
-			ctx.globalAlpha = 0.8;
-			aabb = movingBmps[i].getAABB(this.stage);
-			ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
-			ctx.restore();
-		}
+		// for(i=0; i<movingBmps.length; ++i){
+		// 	ctx.save();                  // Save the current state
+		// 	ctx.fillStyle = '#00FFFF';       // Make changes to the settings
+		// 	ctx.globalAlpha = 0.8;
+		// 	// aabb = movingBmps[i].getAABB(this.stage);
+		// 	aabb = movingBmps[i].aabb;
+		// 	aabb = aabb.transform(container.matrix);
+		// 	ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
+		// 	ctx.restore();
+		// }
 
 
 		// console.log(container.width);
 
+		// container
 		ctx.save();		// Save the current state
 		ctx.fillStyle = '#FF0000';		// Make changes to the settings
 		ctx.globalAlpha = 0.2;
@@ -111,10 +111,13 @@ window.onload = function(){
 		ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
 		ctx.restore();
 
+		// bitmap 
 		ctx.save();		// Save the current state
-		ctx.fillStyle = '#00CC00';		// Make changes to the settings
-		ctx.globalAlpha = 0.4;
-		var aabb = bmp.getAABB(this.stage);
+		ctx.fillStyle = '#00FF00';		// Make changes to the settings
+		ctx.globalAlpha = 0.8;
+		// var aabb = bmp.getAABB(this.stage);
+		aabb = bmp.aabb;
+		aabb.matrix = aabb.matrix.multiplyLeft(container.matrix);
 		ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
 		ctx.restore();
 	}

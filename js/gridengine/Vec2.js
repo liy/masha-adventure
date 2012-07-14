@@ -15,7 +15,7 @@
 	/*
 	Set the position of the Vector
 	*/
-	p.setPosition = function(x, y){
+	p.setXY = function(x, y){
 		this.x = x;
 		this.y = y;
 	};

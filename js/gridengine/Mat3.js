@@ -128,18 +128,17 @@
 
 	// TODO: The transform method, should it be in the Mat3 class or Vec2 class
 	/**
-	* transform the Vec2 instance.
+	* transform the Vec2 instance, return a new transformed Vec2.
     * | a    c    tx |       | x |
 	* | b    d    ty |   *   | y |
 	* | 0    0    1  |       | 1 |
 	*/
 	p.transform = function(v){
-		var x = v.x;
-		var y = v.y;
-		v.x = this.a*x + this.c*y + this.tx;
-		v.y = this.b*x + this.d*y + this.ty;
+		var nv = new Vec2();
+		nv.x = this.a*v.x + this.c*v.y + this.tx;
+		nv.y = this.b*v.x + this.d*v.y + this.ty;
 
-		return v;
+		return nv;
 	};
 
 	/*

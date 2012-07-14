@@ -16,6 +16,8 @@
 			this.image.onload = bind(this, function(){
 				this._rect.width = this.image.width;
 				this._rect.height = this.image.height;
+
+				this._aabb.setRect(this._rect);
 			});
 			this.image.src = src;
 		}
@@ -23,6 +25,8 @@
 			this.image = src;
 			this._rect.width = this.image.width;
 			this._rect.height = this.image.height;
+
+			this._aabb.setRect(this._rect);
 		}
 	};
 
@@ -49,12 +53,16 @@
 	*/
 	Object.defineProperty(p, "aabb", {
 		get: function(){
-			// notice that this.matrix getter will call updateMatrix() function to ensure the matrix applied to this object is update to date.
-			this._aabb.compute(this._rect, this.matrix);
+			// this._aabb.matrix.identity();
+			// this._aabb.setRect(this._rect);
+			// this._aabb.transform(this.matrix);
+			this._aabb.isDirty = true;
+			this._aabb.matrix.identity();
+			this._aabb.matrix = this._aabb.matrix.multiplyLeft(this.matrix);
 			// Since AABB instance just finished computing, it is set to be clean in order to reduce the computation cost.
 			this._aabb.isDirty = false;
 
-			return this._aabb;
+			return this._aabb.clone();
 		}
 	});
 
@@ -64,10 +72,11 @@
 	p.getAABB = function(targetCoordinate){
 		var aabb = new AABB();
 		// identity matrix applied to the rectangle.
-		aabb.compute(this._rect, new Mat3());
+		aabb.setRect(this._rect);
+		aabb.transform(new Mat3());
 		var currentObj = this;
 		while(currentObj != targetCoordinate){
-			aabb.transformBy(currentObj.matrix);
+			aabb.transform(currentObj.matrix);
 			currentObj = currentObj.parent;
 		}
 		return aabb;
