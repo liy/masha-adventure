@@ -64,27 +64,20 @@
 			if(this._aabb.isDirty){
 				// simply merge all the AABB will produce the container's AABB.
 				if(this._children.length !== 0){
-					// this._aabb = this._children[0].aabb.clone().transform(this.matrix);
-					// // this._aabb = this._children[0].getAABB(this.parent);
-					// // this._aabb = this._children[0].getAABB(this).transformBy(this.matrix);
-
-
-					// for(var i=1; i<this._children.length; ++i){
-					// 	this._aabb.merge(this._children[i].aabb.clone().transform(this.matrix));
-					// 	// this._aabb.merge(this._children[i].getAABB(this.parent));
-					// 	// this._aabb.merge(this._children[i].getAABB(this).transformBy(this.matrix));
-					// }
-
+					
 					this._aabb = this._children[0].aabb;
 					this._aabb.matrix = this._aabb.matrix.multiplyLeft(this.matrix);
+					// this._aabb.update();
 					var len = this.numChildren;
 					for(var i=1; i<len; ++i){
 						var aabb = this._children[i].aabb;
 						aabb.matrix = aabb.matrix.multiplyLeft(this.matrix);
+						aabb.update();
 
 						this._aabb.merge(aabb);
 					}
 				}
+
 				this.dirtyAABB = false;
 			}
 			return this._aabb;

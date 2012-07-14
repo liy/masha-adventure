@@ -75,16 +75,33 @@
 	// 	return this;
 	// };
 
+
+
 	/*
 	Getter and setter
 	*/
 	Object.defineProperty(p, "matrix", {
 		get: function(){
-			return this._matrix;
+			return this._matrix.clone();
 		},
 		set: function(matrix){
-			this._matrix = matrix;
+			// TODO: whether to clone the matrix?
+			this._matrix = matrix.clone();
+			// mark the AABB dirty, so it will be updated when necessary.
+			this.isDirty = true;
+		}
+	});
 
+	/*
+	Merge 2 AABBs into a new AABB
+	*/
+	AABB.merge = function(aabb1, aabb2){
+		var aabb3 = aabb1.clone();
+		return aabb3.merge(aabb2);
+	};
+
+	p.update = function(){
+		if(this.isDirty){
 			var lowerBound = this._matrix.transform(this.vertices[0]);
 			var upperBound = lowerBound;
 
@@ -95,15 +112,11 @@
 			}
 			this.lowerBound = lowerBound;
 			this.upperBound = upperBound;
-		}
-	});
 
-	/*
-	Merge 2 AABBs into a new AABB
-	*/
-	AABB.merge = function(aabb1, aabb2){
-		var aabb3 = aabb1.clone();
-		return aabb3.merge(aabb2);
+			console.log("update performed");
+
+			this.isDirty = false;
+		}
 	};
 
 	/*

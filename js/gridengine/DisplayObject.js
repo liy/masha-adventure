@@ -50,6 +50,9 @@
 			this._m.rotate(this._radian);//rotation transform
 			this._m.translate(this._x, this._y);//normal position translation transform
 
+			// update the matrix of the AABB
+			this._aabb.matrix = this._m;
+
 			this.dirtyMatrix = false;
 		}
 	};
@@ -200,9 +203,14 @@
 		}
 	});
 
+	/*
+	Getter and setter
+	*/
 	Object.defineProperty(p, "aabb", {
 		get: function(){
-			// dummy getter
+			// update AABB, in order to use the latest matrix of this Bitmap instance.
+			this._aabb.update();
+			// return the clone of the aabb.
 			return this._aabb.clone();
 		}
 	});
@@ -216,8 +224,6 @@
 		set: function(isDirty){
 			// mark the AABB to be the specific value.
 			this._aabb.isDirty = isDirty;
-
-			console.log("set dirty: " + isDirty)
 
 			// If this DisplayObject's bounding box become dirty, then its parent Container's bounding box MIGHT
 			// needs to be re-comput as well.

@@ -19,10 +19,10 @@ window.onload = function(){
 		setInterval(mainloop, interval);
 
 		container = new Container();
-		container.x = 10;
-		container.y = 10;
-		container.radian = -Math.PI/4;
-		container.scaleX = 1/2;
+		// container.x = 100;
+		// container.y = 100;
+		// container.radian = -Math.PI/4;
+		// container.scaleX = 1/2;
 		container.name = "Sub Container";
 		stage.addChild(container);
 
@@ -32,7 +32,7 @@ window.onload = function(){
 		//bmp.anchorY = 32;
 		bmp.x = 0;
 		bmp.y = 0;
-		// bmp.scaleX = 2;
+		bmp.scaleY = 2;
 		container.addChild(bmp);
 
 		for(var i=0; i<1; ++i){
@@ -116,8 +116,9 @@ window.onload = function(){
 		ctx.fillStyle = '#00FF00';		// Make changes to the settings
 		ctx.globalAlpha = 0.8;
 		// var aabb = bmp.getAABB(this.stage);
-		aabb = bmp.aabb;
-		aabb.matrix = aabb.matrix.multiplyLeft(container.matrix);
+		var aabb = bmp.aabb;
+		// aabb.matrix = aabb.matrix.multiplyLeft(container.matrix);
+		// aabb.update();
 		ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
 		ctx.restore();
 	}

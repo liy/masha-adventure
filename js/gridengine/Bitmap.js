@@ -49,24 +49,6 @@
 	};
 
 	/*
-	Getter and setter
-	*/
-	Object.defineProperty(p, "aabb", {
-		get: function(){
-			// this._aabb.matrix.identity();
-			// this._aabb.setRect(this._rect);
-			// this._aabb.transform(this.matrix);
-			this._aabb.isDirty = true;
-			this._aabb.matrix.identity();
-			this._aabb.matrix = this._aabb.matrix.multiplyLeft(this.matrix);
-			// Since AABB instance just finished computing, it is set to be clean in order to reduce the computation cost.
-			this._aabb.isDirty = false;
-
-			return this._aabb.clone();
-		}
-	});
-
-	/*
 	Get an AABB in the targeted corodinate system
 	*/
 	p.getAABB = function(targetCoordinate){
