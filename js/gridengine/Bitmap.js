@@ -57,6 +57,11 @@
 				this._aabb.reset(this._rect);
 				// compute AABB, according to the matrix of the this Bitmap instance.
 				this._aabb.transform(this.matrix);
+
+				this.dirtyAABB = false;
+
+				if(this.name == "bmp")
+					console.log("perform Bitmap AABB transform");
 			}
 			// return the clone of the aabb.
 			return this._aabb;

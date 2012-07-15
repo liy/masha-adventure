@@ -19,17 +19,18 @@ window.onload = function(){
 		setInterval(mainloop, interval);
 
 		container = new Container();
-		// container.x = 10;
-		// container.y = 10;
-		// container.radian = -Math.PI/4;
+		container.x = 100;
+		container.y = 100;
+		container.radian = -Math.PI/4;
 		// container.scaleX = container.scaleY = 1/2;
 		container.name = "Sub Container";
 		stage.addChild(container);
 
 
 		bmp = new Bitmap('img/rails.png');
-		//bmp.anchorX = 25;
-		//bmp.anchorY = 32;
+		bmp.name = "bmp";
+		bmp.anchorX = 25;
+		bmp.anchorY = 32;
 		bmp.x = 0;
 		bmp.y = 0;
 		bmp.scaleY = 1/2;
@@ -40,6 +41,7 @@ window.onload = function(){
 			var b = new Bitmap('img/rails.png');
 			b.x = b.tx = 50//Math.random()*300//50;
 			b.y = b.ty = 64//Math.random()*300//64;
+			b.scaleX = b.scaleY = Math.random() * 0.8 + 0.2;
 			b.dm = Math.random()*10 + 5;
 			b.dr = 0.05*Math.random() - 0.03;
 			movingBmps.push(b);
@@ -47,13 +49,13 @@ window.onload = function(){
 		}
 
 		canvas.addEventListener('click', bind(this, function(e){
-			console.log("Mouse click: " + e.clientX + "," + e.clientY);
+			// console.log("Mouse click: " + e.clientX + "," + e.clientY);
 
 
 			// var invert = bigContainer.concatedMatrix.clone().invert();
 			// var clickPos = invert.transform(new Vec2(e.clientX, e.clientY));
 			var clickPos = container.getGlobalVec2(new Vec2(e.clientX, e.clientY));
-			//console.log(clickPos.x, clickPos.y);
+			// var clickPos = new Vec2(e.clientX, e.clientY);
 			bmp.x = clickPos.x;
 			bmp.y = clickPos.y;
 
@@ -74,12 +76,13 @@ window.onload = function(){
 		var ctx = stage.context;
 		var i;
 
-		bmp.radian += 0.1;
+		// bmp.radian += 0.1;
+		// container.radian -= 0.1
 
 		// for(i=0; i<movingBmps.length; ++i){
 		// 	if(Math.abs(movingBmps[i].tx - movingBmps[i].x) < 0.3 && Math.abs(movingBmps[i].ty - movingBmps[i].y) < 0.3){
-		// 		movingBmps[i].tx = Math.random()*500*Math.random() + 50;
-		// 		movingBmps[i].ty = Math.random()*300*Math.random() + 50;
+		// 		movingBmps[i].tx = Math.random()*600 * Math.random();
+		// 		movingBmps[i].ty = Math.random()*400 * Math.random();
 		// 	}
 		// 	else{
 		// 		movingBmps[i].x += (movingBmps[i].tx - movingBmps[i].x)/movingBmps[i].dm;
@@ -102,7 +105,7 @@ window.onload = function(){
 		// }
 
 
-		// console.log(container.width);
+		// console.log(container.height);
 
 		// container
 		ctx.save();		// Save the current state
@@ -117,7 +120,8 @@ window.onload = function(){
 		ctx.fillStyle = '#00FF00';		// Make changes to the settings
 		ctx.globalAlpha = 0.8;
 		// var aabb = bmp.getAABB(this.stage);
-		var aabb = bmp.aabb;
+		var aabb = bmp.aabb.clone();
+		aabb.transform(container.matrix);
 		ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
 		ctx.restore();
 	}

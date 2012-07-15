@@ -35,8 +35,15 @@
 	});
 
 	p.addChild = function(displayObject){
+		// first we need to remove it from its old Container.
+		if(displayObject.parent != null){
+			displayObject.parent.removeChild(displayObject);
+		}
+
+		// Add the DisplayObject to this Container's children list.
 		this._children.push(displayObject);
 		displayObject.parent = this;
+
 		// bounding box might be changed
 		this.dirtyAABB = true;
 	};
@@ -48,9 +55,12 @@
 	p.removeChildAt = function(index){
 		if(index < 0 || index > this._children.length-1)
 			return null;
+
 		var removed = this._children[index];
 		delete this._children[index];
 		removed.parent = null;
+		
+		// it is now off the stage.
 		removed.setStage = null;
 
 		// bounding box might be changed
@@ -59,16 +69,30 @@
 		return removed;
 	};
 
+	/*
+	Whether the Container contains the child.
+	*/
+	p.contains = function(displayObject){
+		return this._children.indexOf(displayObject) != -1;
+	};
+
 	Object.defineProperty(p, "aabb", {
 		get: function(){
+			// Only calculate AABB when it is dirty.
 			if(this._aabb.isDirty){
+				// reset AABB so it is ready for perform merging.
 				this._aabb.reset();
 
+				// Scan all the children, merge their AABBs into this Container's AABB, notice that the Container's matrix is passed with the merging.
+				// That is because we need to merge the child's AABB after performed its Container's transformation, in this case, the Container's AABB
+				// will be tightly wraps all its children's AABB.
 				var len = this._children.length;
 				for(var i=0; i<len; ++i){
 					this._aabb.merge(this._children[i].aabb, this.matrix);
 				}
+				console.log("perform container AABB transform");
 
+				// It is very computation heavy to compute an AABB for Container. Once an AABB is calculated once, it will be set to clean, no need to calculate again.
 				this.dirtyAABB = false;
 			}
 			return this._aabb;
@@ -107,6 +131,9 @@
 		}
 	});
 
+	/*
+	Make this Container on or off stage. Of course, all its children will be set as well.
+	*/
 	p.setStage = function(stage){
 		this.stage = stage;
 		for(var i=0; i<this._children.length; ++i){
