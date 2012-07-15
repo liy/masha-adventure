@@ -62,16 +62,11 @@
 	Object.defineProperty(p, "aabb", {
 		get: function(){
 			if(this._aabb.isDirty){
-				// simply merge all the AABB will produce the container's AABB.
-				if(this._children.length !== 0){
-					// clear the original container's AABB, ready to merge all the AABBs of the children.
-					this._aabb.reset();
-					// scan all the children, and merge their AABBs. The corresponding AABB is transformed by the container's matrix before it is 
-					// merged.
-					var len = this.numChildren;
-					for(var i=0; i<len; ++i){
-						this._aabb.merge(this._children[i].aabb, this.matrix);
-					}
+				this._aabb.reset();
+
+				var len = this._children.length;
+				for(var i=0; i<len; ++i){
+					this._aabb.merge(this._children[i].aabb, this.matrix);
 				}
 
 				this.dirtyAABB = false;

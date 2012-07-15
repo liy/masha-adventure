@@ -19,10 +19,10 @@ window.onload = function(){
 		setInterval(mainloop, interval);
 
 		container = new Container();
-		container.x = 10;
-		container.y = 10;
+		// container.x = 10;
+		// container.y = 10;
 		// container.radian = -Math.PI/4;
-		container.scaleX = container.scaleY = 1/2;
+		// container.scaleX = container.scaleY = 1/2;
 		container.name = "Sub Container";
 		stage.addChild(container);
 
@@ -32,7 +32,7 @@ window.onload = function(){
 		//bmp.anchorY = 32;
 		bmp.x = 0;
 		bmp.y = 0;
-		bmp.scaleY = 2;
+		bmp.scaleY = 1/2;
 		// bmp.radian = Math.PI/4;
 		container.addChild(bmp);
 
@@ -74,7 +74,7 @@ window.onload = function(){
 		var ctx = stage.context;
 		var i;
 
-		// bmp.radian += 0.1;
+		bmp.radian += 0.1;
 
 		// for(i=0; i<movingBmps.length; ++i){
 		// 	if(Math.abs(movingBmps[i].tx - movingBmps[i].x) < 0.3 && Math.abs(movingBmps[i].ty - movingBmps[i].y) < 0.3){
@@ -117,8 +117,7 @@ window.onload = function(){
 		ctx.fillStyle = '#00FF00';		// Make changes to the settings
 		ctx.globalAlpha = 0.8;
 		// var aabb = bmp.getAABB(this.stage);
-		var aabb = bmp.aabb.clone();
-		// aabb.transform(bmp.concatedMatrix);
+		var aabb = bmp.aabb;
 		ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
 		ctx.restore();
 	}

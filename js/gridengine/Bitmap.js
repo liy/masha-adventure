@@ -17,7 +17,7 @@
 				this._rect.width = this.image.width;
 				this._rect.height = this.image.height;
 
-				this._aabb.setRect(this._rect);
+				this._aabb.reset(this._rect);
 			});
 			this.image.src = src;
 		}
@@ -26,7 +26,7 @@
 			this._rect.width = this.image.width;
 			this._rect.height = this.image.height;
 
-			this._aabb.setRect(this._rect);
+			this._aabb.reset(this._rect);
 		}
 	};
 
@@ -53,7 +53,11 @@
 	*/
 	Object.defineProperty(p, "aabb", {
 		get: function(){
-			this._aabb.transform(this.matrix);
+			if(this._aabb.isDirty){
+				this._aabb.reset(this._rect);
+				// compute AABB, according to the matrix of the this Bitmap instance.
+				this._aabb.transform(this.matrix);
+			}
 			// return the clone of the aabb.
 			return this._aabb;
 		}
