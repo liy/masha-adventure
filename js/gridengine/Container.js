@@ -12,6 +12,9 @@
 		this._children = [];
 	};
 
+	/*
+	Draw the Container onto the specific Canvas2D context.
+	*/
 	p.draw = function(ctx){
 		// update matrix, getting ready for apply to the context.
 		this.updateMatrix();
@@ -28,12 +31,18 @@
 		ctx.restore();
 	};
 
+	/*
+	Return the number of children in this Container
+	*/
 	Object.defineProperty(p, "numChildren", {
 		get: function(){
 			return this._children.length;
 		}
 	});
 
+	/*
+	Add a DisplayObject into this Container.
+	*/
 	p.addChild = function(displayObject){
 		// first we need to remove it from its old Container.
 		if(displayObject.parent != null){
@@ -48,10 +57,16 @@
 		this.dirtyAABB = true;
 	};
 
+	/*
+	Remove a DisplayObject from the Container.
+	*/
 	p.removeChild = function(displayObject){
 		removeChildAt(this._children.indexOf(displayObject));
 	};
 
+	/*
+	Remove a DisplayObject indexed by the parameter. If index is out of bound, null is returned.
+	*/
 	p.removeChildAt = function(index){
 		if(index < 0 || index > this._children.length-1)
 			return null;
@@ -76,6 +91,9 @@
 		return this._children.indexOf(displayObject) != -1;
 	};
 
+	/*
+	Compute an AABB for this Container.
+	*/
 	Object.defineProperty(p, "aabb", {
 		get: function(){
 			// Only calculate AABB when it is dirty.
@@ -90,7 +108,7 @@
 				for(var i=0; i<len; ++i){
 					this._aabb.merge(this._children[i].aabb, this.matrix);
 				}
-				console.log("perform container AABB transform");
+				// console.log("perform container AABB transform");
 
 				// It is very computation heavy to compute an AABB for Container. Once an AABB is calculated once, it will be set to clean, no need to calculate again.
 				this.dirtyAABB = false;

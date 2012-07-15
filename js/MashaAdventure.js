@@ -21,8 +21,8 @@ window.onload = function(){
 		container = new Container();
 		container.x = 100;
 		container.y = 100;
-		container.radian = -Math.PI/4;
-		// container.scaleX = container.scaleY = 1/2;
+		container.radian = Math.PI/6;
+		container.scaleX = container.scaleY = 2/3;
 		container.name = "Sub Container";
 		stage.addChild(container);
 
@@ -33,11 +33,11 @@ window.onload = function(){
 		bmp.anchorY = 32;
 		bmp.x = 0;
 		bmp.y = 0;
-		bmp.scaleY = 1/2;
+		// bmp.scaleY = 1/2;
 		// bmp.radian = Math.PI/4;
 		container.addChild(bmp);
 
-		for(var i=0; i<1; ++i){
+		for(var i=0; i<50; ++i){
 			var b = new Bitmap('img/rails.png');
 			b.x = b.tx = 50//Math.random()*300//50;
 			b.y = b.ty = 64//Math.random()*300//64;
@@ -49,15 +49,15 @@ window.onload = function(){
 		}
 
 		canvas.addEventListener('click', bind(this, function(e){
-			// console.log("Mouse click: " + e.clientX + "," + e.clientY);
+			console.log("Mouse click: " + e.clientX + "," + e.clientY);
 
+			var localPos = container.globalToLocal(new Vec2(e.clientX, e.clientY));
+			// var localPos = new Vec2(e.clientX, e.clientY);
+			bmp.x = localPos.x;
+			bmp.y = localPos.y;
 
-			// var invert = bigContainer.concatedMatrix.clone().invert();
-			// var clickPos = invert.transform(new Vec2(e.clientX, e.clientY));
-			var clickPos = container.getGlobalVec2(new Vec2(e.clientX, e.clientY));
-			// var clickPos = new Vec2(e.clientX, e.clientY);
-			bmp.x = clickPos.x;
-			bmp.y = clickPos.y;
+			var globalPos = container.localToGlobal(new Vec2(bmp.x, bmp.y));
+			console.log(globalPos.toString());
 
 		}, false));
 
@@ -79,17 +79,17 @@ window.onload = function(){
 		// bmp.radian += 0.1;
 		// container.radian -= 0.1
 
-		// for(i=0; i<movingBmps.length; ++i){
-		// 	if(Math.abs(movingBmps[i].tx - movingBmps[i].x) < 0.3 && Math.abs(movingBmps[i].ty - movingBmps[i].y) < 0.3){
-		// 		movingBmps[i].tx = Math.random()*600 * Math.random();
-		// 		movingBmps[i].ty = Math.random()*400 * Math.random();
-		// 	}
-		// 	else{
-		// 		movingBmps[i].x += (movingBmps[i].tx - movingBmps[i].x)/movingBmps[i].dm;
-		// 		movingBmps[i].y += (movingBmps[i].ty - movingBmps[i].y)/movingBmps[i].dm;
-		// 	}
-		// 	movingBmps[i].radian += movingBmps[i].dr;
-		// }
+		for(i=0; i<movingBmps.length; ++i){
+			if(Math.abs(movingBmps[i].tx - movingBmps[i].x) < 0.3 && Math.abs(movingBmps[i].ty - movingBmps[i].y) < 0.3){
+				movingBmps[i].tx = Math.random()*600 * Math.random();
+				movingBmps[i].ty = Math.random()*400 * Math.random();
+			}
+			else{
+				movingBmps[i].x += (movingBmps[i].tx - movingBmps[i].x)/movingBmps[i].dm;
+				movingBmps[i].y += (movingBmps[i].ty - movingBmps[i].y)/movingBmps[i].dm;
+			}
+			movingBmps[i].radian += movingBmps[i].dr;
+		}
 		
 		stage.draw();
 

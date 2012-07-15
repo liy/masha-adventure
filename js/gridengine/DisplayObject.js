@@ -35,6 +35,12 @@
 		this.dirtyMatrix = true;
 	};
 
+	/*
+	Update the transform matrix of the DisplayObject. The process will only perform when the matrix is dirty, in other word, the position, scale, rotation and anchor off set,
+	any of them changed, the matrix will be marked dirty, matrix will be updated when the method is called.
+	Note that, children's matrix changes DOES affect or propagate up through their ancestor's matrix. Also, if this DisplayObject is a Container, add or remove child
+	DOES NOT affect the matrix of the Container.
+	*/
 	p.updateMatrix = function(){
 		if(this.dirtyMatrix){
 			this._m.identity();
@@ -50,14 +56,21 @@
 			this._m.rotate(this._radian);//rotation transform
 			this._m.translate(this._x, this._y);//normal position translation transform
 
+			// the matrix is clean, no need perform matrix construction again.
 			this.dirtyMatrix = false;
 		}
 	};
 
+	/*
+	Abstract method
+	*/
 	p.draw = function(ctx){
 		// not implemented.
 	};
 
+	/*
+	The matrix of the DisplayObject.
+	*/
 	Object.defineProperty(p, "matrix", {
 		get: function(){
 			// ensure the matrix is up to date.
@@ -112,17 +125,21 @@
 			// just in case the matrix applied to this object is dirty.
 			this.updateMatrix();
 
-			// TODO: Might want to put the concatenated matrix variable back.
+			// TODO: Might want to cache concatenation matrix.
 			var m = new Mat3(this._m.a, this._m.b, this._m.c, this._m.d, this._m.tx, this._m.ty);
 
-			if(this.parent != null){
+			// If parent is not null, concatenate the current matrix and return it:
+			// currentMatrix * parentConcatedMatrix
+			if(this.parent != null)
 				return m.multiplyLeft(this.parent.concatedMatrix);
-			}
 			else
 				return m;
 		}
 	});
 
+	/*
+	X position of the DisplayObject.
+	*/
 	Object.defineProperty(p, "x", {
 		get: function(){
 			return this._x;
@@ -134,6 +151,9 @@
 		}
 	});
 
+	/*
+	Y position of the DisplayObject.
+	*/
 	Object.defineProperty(p, "y", {
 		get: function(){
 			return this._y;
@@ -145,6 +165,9 @@
 		}
 	});
 
+	/*
+	X scale of the DisplayObject.
+	*/
 	Object.defineProperty(p, "scaleX", {
 		get: function(){
 			return this._scaleX;
@@ -156,6 +179,9 @@
 		}
 	});
 
+	/*
+	Y scale of the DisplayObject.
+	*/
 	Object.defineProperty(p, "scaleY", {
 		get: function(){
 			return this._scaleY;
@@ -167,6 +193,9 @@
 		}
 	});
 
+	/*
+	The radian of the DisplayObject.
+	*/
 	Object.defineProperty(p, "radian", {
 		get: function(){
 			return this._radian;
@@ -178,6 +207,9 @@
 		}
 	});
 
+	/*
+	The registration point X of the DisplayObject
+	*/
 	Object.defineProperty(p, "anchorX", {
 		get: function(){
 			return this._anchorX;
@@ -189,6 +221,9 @@
 		}
 	});
 
+	/*
+	The registration point Y of the DisplayObject.
+	*/
 	Object.defineProperty(p, "anchorY", {
 		get: function(){
 			return this._anchorY;
@@ -251,18 +286,36 @@
 		}
 	});
 
-	p.getGlobalVec2 = function(v){
-		// var invert = this.concatedMatrix.clone().invert();
-		// return invert.transform(v);
+	/*
+	Transform the global coordinate vector into the local coordinate system.
+	For example, position a DisplayObject to where user click, but also into a scaled, rotated and translated Container. The mouse position must
+	be transformed use this method: container.globalToLocal(mousePosition).
+	*/
+	p.globalToLocal = function(v){
 		var invert = this.concatedMatrix.invert();
         return invert.transform(v);
+	};
 
+	/*
+	This perform an opposite action as globalToLocal method. It produce a 'global' position from the 'local' position.
+	*/
+	p.localToGlobal = function(v){
+		return this.concatedMatrix.transform(v);
 	};
 
 	// private method, internal use only
 	p.setStage = function(stage){
 		this.stage = stage;
 	};
+
+	/*
+	Return true if the DisplayObject is on the stage.
+	*/
+	Object.defineProperty(p, "isOnStage", {
+		get: function(){
+			return this.stage != null;
+		}
+	});
 
 	window.DisplayObject = DisplayObject;
 }(window));

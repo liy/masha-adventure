@@ -27,8 +27,8 @@
 			this.vertices[2].zero();
 			this.vertices[3].zero();
 
-			this.lowerBound = new Vec2(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
-			this.upperBound = new Vec2(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);
+			this.lowerBound.setXY(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
+			this.upperBound.setXY(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);
 		}
 		else{
 			// ccw vertices arrangement

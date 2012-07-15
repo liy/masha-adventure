@@ -30,6 +30,9 @@
 		}
 	};
 
+	/*
+	Draw the Bitmap onto Canvas2D context.
+	*/
 	p.draw = function(ctx){
 		if(!this.visible)
 			return;
@@ -49,7 +52,7 @@
 	};
 
 	/*
-	Getter and setter
+	Calculate and return the AABB of the Bitmap instance.
 	*/
 	Object.defineProperty(p, "aabb", {
 		get: function(){
@@ -65,12 +68,6 @@
 			}
 			// return the clone of the aabb.
 			return this._aabb;
-		}
-	});
-
-	Object.defineProperty(p, "isOnStage", {
-		get: function(){
-			return this.stage != null;
 		}
 	});
 
