@@ -19,10 +19,10 @@ window.onload = function(){
 		setInterval(mainloop, interval);
 
 		container = new Container();
-		// container.x = 100;
-		// container.y = 100;
+		container.x = 10;
+		container.y = 10;
 		// container.radian = -Math.PI/4;
-		// container.scaleX = 1/2;
+		container.scaleX = container.scaleY = 1/2;
 		container.name = "Sub Container";
 		stage.addChild(container);
 
@@ -33,12 +33,13 @@ window.onload = function(){
 		bmp.x = 0;
 		bmp.y = 0;
 		bmp.scaleY = 2;
+		// bmp.radian = Math.PI/4;
 		container.addChild(bmp);
 
 		for(var i=0; i<1; ++i){
 			var b = new Bitmap('img/rails.png');
-			b.x = b.tx = Math.random()*300//50;
-			b.y = b.ty = Math.random()*300//64;
+			b.x = b.tx = 50//Math.random()*300//50;
+			b.y = b.ty = 64//Math.random()*300//64;
 			b.dm = Math.random()*10 + 5;
 			b.dr = 0.05*Math.random() - 0.03;
 			movingBmps.push(b);
@@ -116,9 +117,8 @@ window.onload = function(){
 		ctx.fillStyle = '#00FF00';		// Make changes to the settings
 		ctx.globalAlpha = 0.8;
 		// var aabb = bmp.getAABB(this.stage);
-		var aabb = bmp.aabb;
-		// aabb.matrix = aabb.matrix.multiplyLeft(container.matrix);
-		// aabb.update();
+		var aabb = bmp.aabb.clone();
+		// aabb.transform(bmp.concatedMatrix);
 		ctx.fillRect(aabb.lowerBound.x, aabb.lowerBound.y, aabb.upperBound.x - aabb.lowerBound.x, aabb.upperBound.y - aabb.lowerBound.y);
 		ctx.restore();
 	}

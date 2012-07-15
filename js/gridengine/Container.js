@@ -64,17 +64,13 @@
 			if(this._aabb.isDirty){
 				// simply merge all the AABB will produce the container's AABB.
 				if(this._children.length !== 0){
-					
-					this._aabb = this._children[0].aabb;
-					this._aabb.matrix = this._aabb.matrix.multiplyLeft(this.matrix);
-					// this._aabb.update();
+					// clear the original container's AABB, ready to merge all the AABBs of the children.
+					this._aabb.reset();
+					// scan all the children, and merge their AABBs. The corresponding AABB is transformed by the container's matrix before it is 
+					// merged.
 					var len = this.numChildren;
-					for(var i=1; i<len; ++i){
-						var aabb = this._children[i].aabb;
-						aabb.matrix = aabb.matrix.multiplyLeft(this.matrix);
-						aabb.update();
-
-						this._aabb.merge(aabb);
+					for(var i=0; i<len; ++i){
+						this._aabb.merge(this._children[i].aabb, this.matrix);
 					}
 				}
 
@@ -83,21 +79,6 @@
 			return this._aabb;
 		}
 	});
-
-	/*
-	Get an AABB in the targeted corodinate system
-	*/
-	p.getAABB = function(targetCoordinate){
-		var aabb = new AABB();
-		if(this._children.length !== 0){
-			aabb = this._children[0].getAABB(targetCoordinate);
-			for (var i = 1; i < this._children.length; i++){
-				aabb.merge(this._children[i].getAABB(targetCoordinate));
-			}
-			// aabb.transformBy(this.matrix);
-		}
-		return aabb;
-	};
 
 	/*
 	Getter and setter

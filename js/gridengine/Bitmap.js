@@ -49,20 +49,15 @@
 	};
 
 	/*
-	Get an AABB in the targeted corodinate system
+	Getter and setter
 	*/
-	p.getAABB = function(targetCoordinate){
-		var aabb = new AABB();
-		// identity matrix applied to the rectangle.
-		aabb.setRect(this._rect);
-		aabb.transform(new Mat3());
-		var currentObj = this;
-		while(currentObj != targetCoordinate){
-			aabb.transform(currentObj.matrix);
-			currentObj = currentObj.parent;
+	Object.defineProperty(p, "aabb", {
+		get: function(){
+			this._aabb.transform(this.matrix);
+			// return the clone of the aabb.
+			return this._aabb;
 		}
-		return aabb;
-	};
+	});
 
 	Object.defineProperty(p, "isOnStage", {
 		get: function(){

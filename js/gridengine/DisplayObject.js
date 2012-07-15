@@ -25,7 +25,7 @@
 		this._m = new Mat3();
 
 		// TODO: Axis-aligned bounding box, for speeding up the rendering and hit test
-		this._aabb = new AABB();
+		this._aabb = new AABB(this);
 
 		// The point representing the position of the GameObject
 		this._anchorX = 0;
@@ -49,9 +49,6 @@
 			this._m.scale(this._scaleX, this._scaleY);// scale transform
 			this._m.rotate(this._radian);//rotation transform
 			this._m.translate(this._x, this._y);//normal position translation transform
-
-			// update the matrix of the AABB
-			this._aabb.matrix = this._m;
 
 			this.dirtyMatrix = false;
 		}
@@ -208,10 +205,8 @@
 	*/
 	Object.defineProperty(p, "aabb", {
 		get: function(){
-			// update AABB, in order to use the latest matrix of this Bitmap instance.
-			this._aabb.update();
-			// return the clone of the aabb.
-			return this._aabb.clone();
+			// dummy code
+			return this._aabb;
 		}
 	});
 

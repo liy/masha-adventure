@@ -1,19 +1,23 @@
 (function(window){
-	function AABB(rect){
-		this._matrix = new Mat3();
-
+	function AABB(){
 		this.lowerBound = new Vec2(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
 		this.upperBound = new Vec2(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);
 
-		// vertices contains un-transformed 4 points.
+		// Just utils vertices contains un-transformed 4 points.
 		this.vertices = [new Vec2(), new Vec2(), new Vec2(), new Vec2()];
-
-		// update vertices, according to the parameter rect.
-		this.setRect(rect);
 
 		this.isDirty = true;
 	}
 	var p = AABB.prototype;
+
+	p.reset = function(){
+		this.lowerBound.x = Number.POSITIVE_INFINITY;
+		this.lowerBound.y = Number.POSITIVE_INFINITY;
+		this.upperBound.x = Number.NEGATIVE_INFINITY;
+		this.upperBound.y = Number.NEGATIVE_INFINITY;
+
+		this.isDirty = true;
+	}
 
 	Object.defineProperty(p, 'x', {
 		get: function(){
@@ -39,6 +43,25 @@
 		}
 	});
 
+	p.transform = function(matrix){
+		if(this.isDirty){
+			var lowerBound = matrix.transform(this.vertices[0]);
+			var upperBound = lowerBound;
+
+			for(var i=1; i<4; ++i){
+				var v = matrix.transform(this.vertices[i]);
+				lowerBound = Vec2.min(lowerBound, v);
+				upperBound = Vec2.max(upperBound, v);
+			}
+			this.lowerBound = lowerBound;
+			this.upperBound = upperBound;
+
+			// console.log("update performed");
+
+			this.isDirty = false;
+		}
+	};
+
 	p.setRect = function(rect){
 		if(rect == null)
 			rect = new Rect();
@@ -52,77 +75,21 @@
 		this.vertices[3].setXY(rect.right, rect.top);
 	};
 
-	/**
-	Compute AABB according to the rectangle and the matrix transformation. If AABB instance is clean, it will
-	NOT perform the computation.
-	*/
-	// p.transform = function(matrix){
-	// 	this.matrix.multiplyLeft(matrix);
-	// 	// TODO: Maybe put this check outside of this class, or even take this.isDirty out of this class?
-	// 	if(this.isDirty){
-	// 		var lowerBound = this.matrix.transform(this.vertices[0]);
-	// 		var upperBound = lowerBound;
-
-	// 		for(var i=1; i<4; ++i){
-	// 			var v = this.matrix.transform(this.vertices[i]);
-	// 			lowerBound = Vec2.min(lowerBound, v);
-	// 			upperBound = Vec2.max(upperBound, v);
-	// 		}
-	// 		this.lowerBound = lowerBound;
-	// 		this.upperBound = upperBound;
-	// 	}
-
-	// 	return this;
-	// };
-
-
-
-	/*
-	Getter and setter
-	*/
-	Object.defineProperty(p, "matrix", {
-		get: function(){
-			return this._matrix.clone();
-		},
-		set: function(matrix){
-			// TODO: whether to clone the matrix?
-			this._matrix = matrix.clone();
-			// mark the AABB dirty, so it will be updated when necessary.
-			this.isDirty = true;
-		}
-	});
-
-	/*
-	Merge 2 AABBs into a new AABB
-	*/
-	AABB.merge = function(aabb1, aabb2){
-		var aabb3 = aabb1.clone();
-		return aabb3.merge(aabb2);
-	};
-
-	p.update = function(){
-		if(this.isDirty){
-			var lowerBound = this._matrix.transform(this.vertices[0]);
-			var upperBound = lowerBound;
-
-			for(var i=1; i<4; ++i){
-				var v = this._matrix.transform(this.vertices[i]);
-				lowerBound = Vec2.min(lowerBound, v);
-				upperBound = Vec2.max(upperBound, v);
-			}
-			this.lowerBound = lowerBound;
-			this.upperBound = upperBound;
-
-			console.log("update performed");
-
-			this.isDirty = false;
-		}
-	};
-
 	/*
 	Merge and update this AABB instance with the specified AABB, and return this instance.
 	*/
-	p.merge = function(aabb){
+	p.merge = function(aabb, matrix){
+		var lowerBound = matrix.transform(aabb.vertices[0]);
+		var upperBound = lowerBound;
+
+		for(var i=1; i<4; ++i){
+			var v = matrix.transform(aabb.vertices[i]);
+			lowerBound = Vec2.min(lowerBound, v);
+			upperBound = Vec2.max(upperBound, v);
+
+			console.log(v.toString());
+		}
+
 		this.lowerBound = Vec2.min(this.lowerBound, aabb.lowerBound);
 		this.upperBound = Vec2.max(this.upperBound, aabb.upperBound);
 
@@ -134,7 +101,7 @@
 		this.vertices[0].setXY(this.lowerBound.x, this.lowerBound.y);
 		this.vertices[1].setXY(this.lowerBound.x, this.upperBound.y);
 		this.vertices[2].setXY(this.upperBound.x, this.upperBound.y);
-		this.vertices[3].setXY(this.upperBound.x, this.lowerBound.y);
+		this.vertices[3].setXY(this.upperBound.x, this.lowerBound.y);	
 
 		return this;
 	};
@@ -146,11 +113,12 @@
 		return new Rect(this.lowerBound.x, this.lowerBound.y, this.upperBound.x-this.lowerBound.x, this.upperBound.y-this.lowerBound.y);
 	};
 
+	
 	/*
 	Clone this AABB
 	*/
 	p.clone = function(){
-		var aabb = new AABB();
+		var aabb = new AABB(this.displayObject);
 
 		aabb.lowerBound = this.lowerBound.clone();
 		aabb.upperBound = this.upperBound.clone();
@@ -160,10 +128,9 @@
 		aabb.vertices[2].setXY(this.vertices[2].x, this.vertices[2].y);
 		aabb.vertices[3].setXY(this.vertices[3].x, this.vertices[3].y);
 
-		aabb.matrix = this.matrix;
-
 		return aabb;
 	};
+
 
 	window.AABB = AABB;
 }(window));
