@@ -3,11 +3,12 @@
 	* Abstract class
 	*/
 	function DisplayObject(){
-		this.klass = "DisplayObject";
 		this.init();
 	}
-	var p = DisplayObject.prototype;
+	var p = DisplayObject.prototype = new EventDispatcher();
 
+	/*
+	*/
 	p.init = function(){
 		this.stage = null;
 		this.visible = true;

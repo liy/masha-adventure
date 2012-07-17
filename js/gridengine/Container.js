@@ -1,14 +1,13 @@
 (function(window){
 	
 	function Container(){
-		this.klass = "Container";
 		this.init();
 	}
 	var p = Container.prototype = new DisplayObject();
 
-	p.super_init = p.init;
+	p.DisplayObject_init = p.init;
 	p.init = function(){
-		this.super_init();
+		this.DisplayObject_init();
 		this._children = [];
 	};
 

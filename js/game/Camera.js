@@ -1,21 +1,25 @@
 (function(window){
-	var scaleX = 1;
-	var scaleY = 1;
-	var oWidth = 1;
-	var oHeight = 1;
-	function Camera(){
+	function Camera(w, h, anchorRatioX, anchorRatioY){
+		this._originalWidth = w;
+		this._originalHeight = h;
+
+		this._rotation = 0;
+		this._scaleX = 1;
+		this._scaleY = 1;
+
+		this.anchorRatioX = anchorRatioX;
+		this.anchorRatioY = anchorRatioY;
+
+		// 2d affine transform matrix, internal use only.
+		this._m = new Mat3();
+		
+		// TODO: change this to _x and _y?
+		this.position = new Vec2();
+
+		this.dirtyMatrix = true;
+
 	}
 	var p = Camera.prototype;
-	
-	p.init = function(w, h, anchorRatioX, anchorRatioY){
-		oWidth = this.currentWidth = w;
-		oHeight = this.currentHeight = h;
-		
-		this.rotation = 0;
-		
-		this.position = new Vec2();
-		this.anchorRatio = new Vec2(anchorRatioX, anchorRatioY);
-	};
 	
 	p.containsPoint = function(x, y){
 		return x >= this.left && x <= this.right && y >= this.top && y <= this.bottom;
@@ -37,23 +41,52 @@
 	};
 	
 	p.resize = function(w, h){
-		this.currentWidth = w;
-		this.currentHeight = h;
-		
-		scaleX = oWidth/w;
-		scaleY = oHeight/h;
+		this._scaleX = w/this._originalWidth;
+		this._scaleY = h/this._originalHeight;
+
+		this.dirtyMatrix = true;
+	};
+
+	/*
+	
+	*/
+	p.update = function(){
+		if(this.dirtyMatrix){
+			this._m.identity();
+
+			// Notice that these convinient methods act like generating corresponding transform matrix.
+			// The new matrix will be multiply to the current matrix:
+			//		this._m = newMatrix * this._m.
+			// Which means, the matrix gernerated by earlier methods will be applied first, the latter matrix will be applied later.
+			// Therefore, the transform sequence shoud be:
+			//		anchor translate  ->  scale  -> rotate  ->  position translate.
+			this._m.translate(this.anchorRatioX * this.width, this.anchorRatioY * this.height);//anchor translation transform
+			this._m.scale(1/this._scaleX, 1/this._scaleY);// scale transform
+			this._m.rotate(-this._rotation);//rotation transform
+			this._m.translate(-this.position.x, -this.position.y);//normal position translation transform
+
+			// the matrix is clean, no need perform matrix construction again.
+			this.dirtyMatrix = false;
+		}
 	};
 	
-	p.transform = function(go){
-		// TODO: simulate the perspective scrolling, update the x position using a
-		// scale, further GameObject has smaller scale.
-		go.x = go.wx - this.position.x + this.currentWidth * this.anchorRatio.x;
-		go.y = go.wy - this.position.y + this.currentHeight * this.anchorRatio.y;
-	};
-	
+	/*
+	Getter and setter
+	*/
+	Object.defineProperty(p, "matrix", {
+		get: function(){
+			return this._m;
+		},
+		set: function(matrix){
+			this._matrix = matrix.clone();
+			this.dirtyMatrix = true;
+		}
+	});
+
 	Object.defineProperty(p, "x", {
 		set: function(value){
 			this.position.x = value;
+			this.dirtyMatrix = true;
 		},
 		get: function(){
 			return this.position.x;
@@ -63,33 +96,73 @@
 	Object.defineProperty(p, "y", {
 		set: function(value){
 			this.position.y = value;
+			this.dirtyMatrix = true;
 		},
 		get: function(){
 			return this.position.y;
 		}
 	});
 
+	/*
+	Getter and setter
+	*/
+	Object.defineProperty(p, "width", {
+		get: function(){
+			return this._originalWidth * this._scaleX;
+		},
+		set: function(width){
+			this._scaleX = width/this._originalWidth;
+			this.dirtyMatrix = true;
+		}
+	});
+
+	/*
+	Getter and setter
+	*/
+	Object.defineProperty(p, "height", {
+		get: function(){
+			return this._originalHeight * this._scaleY;
+		},
+		set: function(height){
+			this._scaley = height/this._originalHeight;
+			this.dirtyMatrix = true;
+		}
+	});
+
+	/*
+	Getter and setter
+	*/
+	Object.defineProperty(p, "rotation", {
+		get: function(){
+			return this._rotation;
+		},
+		set: function(rotation){
+			this._rotation = rotation;
+			this.dirtyMatrix = true;
+		}
+	});
+
 	Object.defineProperty(p, "right", {
 		get: function(){
-			return this.position.x + this.currentWidth * (1-this.anchorRatio.x);
+			return this.position.x + this.width * (1-this.anhorRatioX);
 		}
 	});
 
 	Object.defineProperty(p, "left", {
 		get: function(){
-			return this.position.x - this.currentWidth * this.anchorRatio.x;
+			return this.position.x - this.width * this.anhorRatioX;
 		}
 	});
 	
 	Object.defineProperty(p, "top", {
 		get: function(){
-			return this.position.y - this.currentHeight * this.anchorRatio.y;
+			return this.position.y - this.height * this.anhorRatioY;
 		}
 	});
 
 	Object.defineProperty(p, "bottom", {
 		get: function(){
-			return this.position.y + this.currentHeight * (1-this.anchorRatio.y);
+			return this.position.y + this.height * (1-this.anhorRatioY);
 		}
 	});
 

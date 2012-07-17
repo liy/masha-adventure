@@ -1,4 +1,7 @@
 (function(window){
+	Vec2.DEGREE_TO_RADIAN = Math.PI/180;
+	Vec2.RADIAN_TO_DEGREE = 180/Math.PI;
+	
 	function Vec2(x, y){
 		if(x != null)
 			this.x = x;

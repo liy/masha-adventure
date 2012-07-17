@@ -4,9 +4,9 @@
 	}
 	var p = Bitmap.prototype = new DisplayObject();
 
-	p.super_init = p.init;
+	p.DisplayObject_init = p.init;
 	p.init = function(src){
-		this.super_init();
+		this.DisplayObject_init();
 
 		// the rectangle object define the area of the object, e.g., the image width and height
 		this._rect = new Rect();

@@ -1,12 +1,13 @@
 (function(window){
 	function Stage(canvas){
+		this.init();
+
 		this.canvas = canvas;
 		this.context = canvas.getContext('2d');
-		this.klass = "Stage";
 	}
 	var p = Stage.prototype = new Container();
 
-	p.draw = function(ctx){
+	p.draw = function(){
 		// reset to identity matrix transform
 		this.context.setTransform(1, 0, 0, 1, 0, 0);
 		// clear the screen
@@ -14,6 +15,9 @@
 
 		// reset identity
 		this._m.identity();
+
+		// transform according to camera matrix
+		// this.context.transform(currentCamera.matrix.a, currentCamera.matrix.b, currentCamera.matrix.c, currentCamera.matrix.d, currentCamera.matrix.tx, currentCamera.matrix.ty);
 
 		// d
 		var len = this._children.length;
