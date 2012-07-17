@@ -6,7 +6,7 @@
 		this.klass = "DisplayObject";
 		this.init();
 	}
-	var p = DisplayObject.prototype = new GameObject();
+	var p = DisplayObject.prototype;
 
 	p.init = function(){
 		this.stage = null;
