@@ -42,6 +42,9 @@
 
 		// push the current matrix state to the stack
 		ctx.save();
+		
+		ctx.globalAlpha *= this.alpha;
+
 		// 2d affine transform
 		ctx.transform(this._m.a, this._m.b, this._m.c, this._m.d, this._m.tx, this._m.ty);
 		// ctx.drawImage(this.image, this._rect.x, this._rect.y, this._rect.width, this._rect.height, 0, 0, this._rect.width, this._rect.height);
