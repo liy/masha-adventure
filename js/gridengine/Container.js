@@ -24,7 +24,8 @@
 		ctx.globalAlpha *= this.alpha;
 
 		// 2d affine transform
-		ctx.transform(this._m.a, this._m.b, this._m.c, this._m.d, this._m.tx, this._m.ty);
+		ctx.transform(this._m.a,  this._m.b, this._m.c, this._m.d, this._m.tx+0.5|0, this._m.ty+0.5|0);
+		// ctx.transform(this._m.a, this._m.b, this._m.c, this._m.d, this._m.tx, this._m.ty);
 		var len = this._children.length;
 		for(var i=0; i<len; ++i){
 			this._children[i].draw(ctx);

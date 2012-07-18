@@ -18,6 +18,8 @@
 				this._rect.height = this.image.height;
 
 				this._aabb.reset(this._rect);
+
+				this.dispatchEvent(new Event(Event.COMPLETE));
 			});
 			this.image.src = src;
 		}
@@ -46,7 +48,8 @@
 		ctx.globalAlpha *= this.alpha;
 
 		// 2d affine transform
-		ctx.transform(this._m.a, this._m.b, this._m.c, this._m.d, this._m.tx, this._m.ty);
+		ctx.transform(this._m.a,  this._m.b, this._m.c, this._m.d, this._m.tx+0.5|0, this._m.ty+0.5|0);
+		// ctx.transform(this._m.a, this._m.b, this._m.c, this._m.d, this._m.tx, this._m.ty);
 		// ctx.drawImage(this.image, this._rect.x, this._rect.y, this._rect.width, this._rect.height, 0, 0, this._rect.width, this._rect.height);
 		ctx.drawImage(this.image, 0, 0);
 

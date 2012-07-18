@@ -44,5 +44,8 @@ EventDispatcher
 	function Event(type){
 		this.type = type;
 	}
+	
+	Event.COMPLETE = 'event.complete';
+
 	window.Event = Event;
 }(window));

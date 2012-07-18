@@ -10,8 +10,7 @@ window.onload = function(){
 
 		setInterval(mainloop, this._interval);
 
-
-		this.goScene('title');
+		this.goScene('game');
 	}
 	var p = MashaAdventure.prototype;
 	/*
@@ -53,11 +52,8 @@ window.onload = function(){
 		stage.draw();
 	};
 
-
-
-	this.currentCamera = new Camera(800, 600, 0.5, 0.5);
 	this.rootCanvas = document.getElementById('root-canvas');
 	this.stage = new Stage(this.rootCanvas);
+	this.stage.camera = new Camera(800, 600, 0.5, 0.5);
 	this.adventure = new MashaAdventure();
-
 };

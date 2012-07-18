@@ -4,6 +4,8 @@
 
 		this.canvas = canvas;
 		this.context = canvas.getContext('2d');
+
+		this.camera = null;
 	}
 	var p = Stage.prototype = new Container();
 
@@ -17,9 +19,12 @@
 		this._m.identity();
 
 		// transform according to camera matrix
-		// this.context.transform(currentCamera.matrix.a, currentCamera.matrix.b, currentCamera.matrix.c, currentCamera.matrix.d, currentCamera.matrix.tx, currentCamera.matrix.ty);
+		if(this.camera != null){
+			this.camera.update();
+			var m = this.camera.matrix;
+			this.context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+		}
 
-		// d
 		var len = this._children.length;
 		for(var i=0; i<len; ++i){
 			this._children[i].draw(this.context);

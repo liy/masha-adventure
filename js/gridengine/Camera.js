@@ -78,37 +78,7 @@
 			return this._m;
 		},
 		set: function(matrix){
-			this._m = matrix.clone();
-
-			/**
-			* Naive decompose process.
-			*
-			*	We assume the matrix will only contains 2D affine transformation, and only an extra Z translation, for now, ignore the translation elements
-			*		| cos(r)*scaleX    -sin(r)*skewX	0  |
-			*		| sin(r)*skewY		cos(r)*scaleY	0  |
-			*		| 0					0				1  |
-			*
-			*	If we apply this matrix to a point at (1.0f, 0.0f)
-			*		x' = cos(r) * scaleX
-			*		y' = sin(r) * skewY
-			*
-			*	The rotation then will be:
-			*		atan2f(x', y')
-			*	===>>
-			*		_rotation = atan2f(_transform[1], _transform[0])
-			*
-			*
-			*	Also the scale will be:
-			*		scaleX = _transform[0] / cos(r)
-			*		scaleY = _transform[5] / cos(r)
-			*/
-			this._rotation = Math.atan2(this._m.b, this._m.a) * Vec2.RADIAN_TO_DEGREE;
-
-			var cos = Math.cos(this.radian);
-			this._scaleX = this._m.a/cos;
-			this._scaleY = this._m.d/cos;
-			this.position.setXY(this._m.tx - this._anchorX, this._m.ty - this._anchorY);
-
+			this._matrix = matrix.clone();
 			this.dirtyMatrix = true;
 		}
 	});
