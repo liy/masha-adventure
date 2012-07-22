@@ -5,8 +5,8 @@
 window.onload = function(){
 	function MashaAdventure(){
 		this.currentScene = null;
-		this._fps = 60;
-		this._interval = this._fps/1000;
+		this._fps = 10;
+		this._interval = 1000/this._fps;
 
 		setInterval(mainloop, this._interval);
 
@@ -49,6 +49,7 @@ window.onload = function(){
 	
 	*/
 	mainloop = function(){
+		// console.log("draw");
 		stage.draw();
 	};
 

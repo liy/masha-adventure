@@ -15,7 +15,7 @@ EventDispatcher
 		listener.func = func;
 		this._listeners.push(listener);
 
-		console.log("added: " + listener.type);
+		// console.log("added: " + listener.type);
 	};
 	
 	p.removeListener = function(type, func){
@@ -23,15 +23,13 @@ EventDispatcher
 			if(this._listeners[i].type == type && func == this._listeners[i].func){
 				delete this._listeners[i];
 
-				console.log("remvoed: " + this._listeners[i]);
+				// console.log("remvoed: " + this._listeners[i]);
 				return;
 			}
 		}
 	};
 	
 	p.dispatchEvent = function(event){
-		console.log(this._listeners.length);
-
 		for(var i in this._listeners){
 			if(this._listeners[i].type == event.type){
 				this._listeners[i].func(event);
@@ -41,6 +39,9 @@ EventDispatcher
 
 	window.EventDispatcher = EventDispatcher;
 
+	/*
+	Base event.
+	*/
 	function Event(type){
 		this.type = type;
 	}
