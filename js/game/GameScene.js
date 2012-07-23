@@ -63,7 +63,7 @@ GameScene
 
 		var animation = new Animation(spriteSheet);
 		this.addChild(animation);
-		animation.play();
+		animation.gotoAndPlay('stop');
 	};
 
 	/*

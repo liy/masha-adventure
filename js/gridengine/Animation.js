@@ -46,12 +46,13 @@
 		this.paused = true;
 
 		// Index points to the frame in the context of the total number of frames in the sprite sheet.
-		this.currentFrameIndex = -1;
+		this.currentFrameIndex = 0;
 
 		// Index points to the frame in the context of the frames in the current animation.
 		this._animationFrameIndex = -1;
 
-		this._animation = null;
+		// the currently playing animation
+		this.currentAnimation = null;
 
 		// advance counter.
 		this._advanceCounter = 0;
@@ -99,7 +100,8 @@
 		ctx.transform(this._m.a,  this._m.b, this._m.c, this._m.d, this._m.tx+0.5|0, this._m.ty+0.5|0);
 
 		var frame = this.spriteSheet.getFrame(this.currentFrameIndex);
-		ctx.drawImage(frame.image, frame.rect.x, frame.rect.y, frame.rect.width, frame.rect.height, -frame.offsetX, -frame.offsetY, frame.rect.width, frame.rect.height);
+		if(frame)
+			ctx.drawImage(frame.image, frame.rect.x, frame.rect.y, frame.rect.width, frame.rect.height, -frame.offsetX, -frame.offsetY, frame.rect.width, frame.rect.height);
 
 		// pop the last saved matrix state, assign to the context.
 		ctx.restore();
@@ -132,7 +134,7 @@
 	*/
 	p.updateAnimation = function(){
 		if(!this.paused){
-			if(this._animation)
+			if(this.currentAnimation)
 				this._animationFrameIndex++;
 			else
 				this.currentFrameIndex++;
@@ -145,7 +147,34 @@
 	
 	*/
 	p._validateFrame = function(){
-
+		if(this.currentAnimation){
+			// number of frames of current animation.
+			var len = this.currentAnimation.frames.length;
+			// check if the animation reaches end
+			if(this._animationFrameIndex >= len){
+				// Reaches the end, depends on whether the animation has next animation...
+				if(this.currentAnimation.next){
+					this.goto(this.currentAnimation.next);
+				}
+				else{
+					// has no next animation
+					this.paused = true;
+					this._animationFrameIndex = len - 1;
+				}
+				// dispatch animation complete event
+				this.dispatchEvent(new Event(Event.COMPLETE));
+			}
+			// update frame index use animation frame index
+			this.currentFrameIndex = this.currentAnimation.frames[this._animationFrameIndex];
+		}
+		else{
+			if(this.currentFrameIndex >= this.spriteSheet.getNumFrames()){
+				// reset frame index to 0
+				this.currentFrameIndex = 0;
+				// dispatch animation complete event
+				this.dispatchEvent(new Event(Event.COMPLETE));
+			}
+		}
 	};
 
 	window.Animation = Animation;
