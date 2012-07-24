@@ -162,7 +162,7 @@
 					this._animationFrameIndex = len - 1;
 				}
 				// dispatch animation complete event
-				this.dispatchEvent(new Event(Event.COMPLETE));
+				this.dispatchEvent(new Event(Event.ANIM_END));
 			}
 			// update frame index use animation frame index
 			this.currentFrameIndex = this.currentAnimation.frames[this._animationFrameIndex];
@@ -172,7 +172,7 @@
 				// reset frame index to 0
 				this.currentFrameIndex = 0;
 				// dispatch animation complete event
-				this.dispatchEvent(new Event(Event.COMPLETE));
+				this.dispatchEvent(new Event(Event.ANIM_END));
 			}
 		}
 	};

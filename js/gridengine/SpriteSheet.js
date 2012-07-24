@@ -27,8 +27,8 @@
 * OTHER DEALINGS IN THE SOFTWARE.
 */
 (function(window){
-	function SpriteSheet(data){
-		this.init(data);
+	function SpriteSheet(){
+		this.init();
 	}
 	var p = SpriteSheet.prototype = new EventDispatcher();
 
@@ -53,9 +53,22 @@
 	p._offsetY = 0;
 
 	/*
+	The total number of loaded images
+	*/
+	p._loadCounter = 0;
+
+	/*
 	Whether the SpriteSheet finishes all the images loading or not
 	*/
 	p.complete = true;
+
+	p.EventDispatcher_init = p.init;
+	/*
+	
+	*/
+	p.init = function(){
+		this.EventDispatcher_init();
+	};
 
 	/*
 	data = {
@@ -118,8 +131,8 @@
 
 	}
 	*/
-	p.init = function(data){
-		if(data == null)
+	p.load = function(data){
+				if(data == null)
 			return;
 
 		var len;
@@ -138,6 +151,7 @@
 
 				// If the image is not loaded, load it!
 				if(!image.complete){
+					++this._loadCounter;
 					this.complete = false;
 					image.onload = bind(this, this.imageLoadHandler);
 				}
@@ -294,12 +308,16 @@
 	
 	*/
 	p.imageLoadHandler = function(){
-		// TODO: handle loaded image.
-		this.complete = true;
+		if(--this._loadCounter === 0){
+			// TODO: handle loaded image.
+			this.complete = true;
+			this.dispatchEvent(new Event(Event.COMPLETE));
+			// this._calculateFrames(data.frames.width, data.frames.height);
+		}
 	};
 
 	p._calculateFrames = function(frameWidth, frameHeight) {
-		if (this._frames || frameWidth == 0) 
+		if(this._frames || frameWidth === 0)
 			return;
 
 		this._frames = [];
@@ -317,7 +335,7 @@
 			ttlFrames += ttl;
 		}
 		this._numFrames = ttlFrames;
-	}
+	};
 
 	window.SpriteSheet = SpriteSheet;
 }(window));

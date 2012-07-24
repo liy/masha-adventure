@@ -7,9 +7,12 @@
 	}
 	var p = DisplayObject.prototype = new EventDispatcher();
 
+	p.EventDispatcher_init = p.init;
 	/*
 	*/
 	p.init = function(){
+		this.EventDispatcher_init();
+
 		this.stage = null;
 		this.visible = true;
 
