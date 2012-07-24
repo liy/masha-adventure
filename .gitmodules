@@ -1,0 +1,3 @@
+[submodule "js/accessibility.js"]
+	path = js/accessibility.js
+	url = https://github.com/liy/accessibility.js.git

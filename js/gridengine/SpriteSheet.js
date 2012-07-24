@@ -295,6 +295,7 @@
 	*/
 	p.imageLoadHandler = function(){
 		// TODO: handle loaded image.
+		this.complete = true;
 	};
 
 	p._calculateFrames = function(frameWidth, frameHeight) {
