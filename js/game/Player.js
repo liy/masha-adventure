@@ -19,11 +19,13 @@ Player
 		var spriteSheet = new SpriteSheet();
 		spriteSheet.load(DataStore.player);
 		this.animation = new Animation(spriteSheet);
+		this.animation.anchorX = 19;
+		this.animation.anchorY = 21;
 
-		this.y = -100;
+		this.y = -200;
 
-		var bodyDef = new b2BodyDef();
-		bodyDef.type = b2Body.b2_dynamicBody;
+		this.bodyDef = new b2BodyDef();
+		this.bodyDef.type = b2Body.b2_dynamicBody;
 
 		var fixDef = new b2FixtureDef();
 		fixDef.density = 1.0;
@@ -31,9 +33,20 @@ Player
 		fixDef.restitution = 0.2;
 		fixDef.shape = new b2PolygonShape();
         fixDef.shape.SetAsBox(19/2/SCALE, 43/2/SCALE);
-        bodyDef.position.x = this.x;
-		bodyDef.position.y = this.y/SCALE;
-		world.CreateBody(bodyDef).CreateFixture(fixDef);
+        this.bodyDef.position.x = this.x;
+		this.bodyDef.position.y = this.y/SCALE;
+		this.playerBody = world.CreateBody(this.bodyDef).CreateFixture(fixDef);
+	};
+
+	/*
+	
+	*/
+	p.update = function(){
+		// update graphics in order to follows physics engine
+		var vec = this.playerBody.m_body.GetPosition();
+		this.animation.x = vec.x * SCALE;
+		this.animation.y = vec.y * SCALE;
+		// console.log(this.bodyDef.position.x, this.bodyDef.position.y)
 	};
 
 	window.Player = Player;

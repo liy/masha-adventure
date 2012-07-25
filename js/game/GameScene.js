@@ -33,7 +33,7 @@ GameScene
 		fixDef.density = 1.0;
 		fixDef.friction = 0.5;
 		fixDef.restitution = 0.2;
-		
+
 		var bodyDef = new b2BodyDef();
 		bodyDef.type = b2Body.b2_staticBody;
 		// positions the center of the object (not upper left!)
@@ -64,6 +64,8 @@ GameScene
 		// console.log('update')
 		world.Step(1/60, 10, 10);
 		world.ClearForces();
+
+		this.player.update();
 	};
 
 	p.Scene_draw = p.draw;
