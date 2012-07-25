@@ -11,15 +11,12 @@
 		return (v>0) && (v & (v-1)) === 0;
 	};
 
-	window.trace = function(){
-		if(arguments.length == 1)
-			console.log(arguments[0]);
-		else{
-			var text = arguments[0] + ', ';
-			for(var i=1; i<arguments.length; ++i){
-				text += arguments[i];
-			}
-			console.log(text);
-		}
-	};
+	// cross browser requestAnimationFrame function
+	window.requestAnimFrame = (function(){
+		return  window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+		function( callback ){
+			window.setTimeout(callback, 1000 / 60);
+		};
+    })();
+
 }(window));

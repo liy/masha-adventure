@@ -1,9 +1,16 @@
 (function(window){
 	function GameObject(){
-		this._x = 0;
-		this._y = 0;
+		this.init();
 	}
 	var p = GameObject.prototype;
+
+	/*
+	
+	*/
+	p.init = function(){
+		this._x = 0;
+		this._y = 0;
+	};
 
 	/*
 	Update the game object
@@ -12,13 +19,12 @@
 		// TODO update the game object position
 	};
 
-
-
 	Object.defineProperty(p, "x", {
 		get: function(){
 			return this._x;
 		},
 		set: function(x){
+			this.animation.x = x;
 			this._x = x;
 		}
 	});
@@ -28,6 +34,7 @@
 			return this._y;
 		},
 		set: function(y){
+			this.animation.y = y;
 			this._y = y;
 		}
 	});
