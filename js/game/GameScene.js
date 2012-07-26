@@ -41,9 +41,15 @@ GameScene
 		bodyDef.position.y = 0;
 
 		fixDef.shape = new b2PolygonShape();
-		// half width, half height.
 		fixDef.shape.SetAsBox((600 / SCALE) / 2, (20/SCALE) / 2);
 		world.CreateBody(bodyDef).CreateFixture(fixDef);
+
+
+		bodyDef.position.x = 100/SCALE;
+		bodyDef.position.y = -100/SCALE;
+		fixDef.shape = new b2PolygonShape();
+		fixDef.shape.SetAsBox((30 / SCALE) / 2, (200/SCALE) / 2);
+		world.CreateBody(bodyDef).CreateFixture(fixDef);	
 
 
 
@@ -116,13 +122,13 @@ GameScene
 		*/
 		switch(evt.keyCode){
 			case 37:
-				force.x = -150;
+				this.player.moveState = Player.MOVE_LEFT;
 			break;
 			case 38:
 				// force.y = -150;
 			break;
 			case 39:
-				force.x = 150;
+				this.player.moveState = Player.MOVE_RIGHT;
 			break;
 			case 40:
 				// force.y = 150;
@@ -138,12 +144,12 @@ GameScene
 		console.log("key up");
 		switch(evt.keyCode){
 			case 37:
-				this.player.force.SetZero();
+				this.player.moveState = Player.MOVE_STOP;
 			break;
 			case 38:
 			break;
 			case 39:
-				this.player.force.SetZero();
+				this.player.moveState = Player.MOVE_STOP;
 			break;
 			case 40:
 			break;

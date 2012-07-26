@@ -9,12 +9,20 @@ Player
 	}
 	var p = Player.prototype = new GameObject();
 
+	Player.MOVE_LEFT = 'left';
+	Player.MOVE_RIGHT = 'right';
+	Player.MOVE_STOP = 'stop';
+
 	p.GameObject_init = p.init;
 	/*
 	
 	*/
 	p.init = function(){
 		this.GameObject_init();
+
+		this.moveState = Player.MOVE_STOP;
+
+		this.desiredVel = 5;
 
 		this.force = new b2Vec2();
 		
@@ -50,22 +58,29 @@ Player
 	p.update = function(){
 		// update graphics in order to follows physics engine
 		var vec = this.body.GetPosition();
-		this.animation.x = vec.x * SCALE;
-		this.animation.y = vec.y * SCALE;
+		this.animation.x = vec.x * SCALE + 0.5|0;
+		this.animation.y = vec.y * SCALE + 0.5|0;
 		// console.log(this.body)
 
-		// apply force
-		this.body.ApplyForce(this.force, this.body.GetPosition());
-
-		var velocity = this.body.GetLinearVelocity();
-		// restrict velocity
-		if(velocity.x > 3){
-			velocity.x = 3;
+		var vel = this.body.GetLinearVelocity();
+		switch(this.moveState){
+			case Player.MOVE_RIGHT:
+				// this.desiredVel = 5;
+				this.desiredVel = Math.min(vel.x + 0.1, 5);
+			break;
+			case Player.MOVE_LEFT:
+				// this.desiredVel = -5;
+				this.desiredVel = Math.max(vel.x - 0.1, -5);
+			break;
+			case Player.MOVE_STOP:
+				// this.desiredVel = 0;
+				this.desiredVel *= 0.9;
+			break;
 		}
-		else if(velocity.x< -3){
-			velocity.x = -3;
-		}
-		this.body.SetLinearVelocity(velocity);
+		var deltaVel = this.desiredVel - vel.x;
+		//disregard time factor
+		var impulse = this.body.GetMass() * deltaVel;
+		this.body.ApplyImpulse(new b2Vec2(impulse, 0), this.body.GetWorldCenter());
 	};
 
 	/*
