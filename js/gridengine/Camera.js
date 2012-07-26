@@ -75,7 +75,7 @@
 	*/
 	Object.defineProperty(p, "matrix", {
 		get: function(){
-			return this._m;
+			return this._m.clone();
 		},
 		set: function(matrix){
 			this._matrix = matrix.clone();

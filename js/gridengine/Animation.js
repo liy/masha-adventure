@@ -134,7 +134,7 @@
 	*/
 	p.updateAnimation = function(){
 		if(!this.paused){
-			if(this.currentAnimation)
+			if(this.currentAnimation && ++this._advanceCounter%this.currentAnimation.frequency === 0)
 				this._animationFrameIndex++;
 			else
 				this.currentFrameIndex++;

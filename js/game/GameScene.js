@@ -31,8 +31,8 @@ GameScene
 		// ground
 		var fixDef = new b2FixtureDef();
 		fixDef.density = 1.0;
-		fixDef.friction = 0.5;
-		fixDef.restitution = 0.2;
+		fixDef.friction = 0.2;
+		fixDef.restitution = 0;
 
 		var bodyDef = new b2BodyDef();
 		bodyDef.type = b2Body.b2_staticBody;
@@ -51,6 +51,9 @@ GameScene
 
 		switches.addListener('switch press', bind(this, this.switchDownHandler));
 		switches.addListener('switch release', bind(this, this.switchUpHandler));
+		rootCanvas.addEventListener("mousedown", bind(this, this.mouseDownHandler), false);
+		document.addEventListener("keydown", bind(this, this.keyDownHandler), false);
+		document.addEventListener("keyup", bind(this, this.keyUpHandler), false);
 
 		this.player = new Player();
 		this.player.animation.gotoAndPlay('run');
@@ -66,6 +69,9 @@ GameScene
 		world.ClearForces();
 
 		this.player.update();
+
+		stage.camera.x = this.player.animation.x;
+		stage.camera.y = this.player.animation.y;
 	};
 
 	p.Scene_draw = p.draw;
@@ -82,6 +88,8 @@ GameScene
 	*/
 	p.switchDownHandler = function(){
 		this.paused = false;
+
+		this.player.jump();
 	};
 
 	/*
@@ -94,15 +102,66 @@ GameScene
 	/*
 	
 	*/
-	p.keyDownHandler = function(){
+	p.keyDownHandler = function(evt){
 		console.log('key down');
+
+		// testing vec
+		var force = new b2Vec2();
+
+		/*
+		left arrow		37
+		up arrow		38
+		right arrow		39
+		down arrow		40
+		*/
+		switch(evt.keyCode){
+			case 37:
+				force.x = -150;
+			break;
+			case 38:
+				// force.y = -150;
+			break;
+			case 39:
+				force.x = 150;
+			break;
+			case 40:
+				// force.y = 150;
+			break;
+		}
+		this.player.force = force;
 	};
 
 	/*
 
 	*/
-	p.keyUpHandler = function(){
+	p.keyUpHandler = function(evt){
 		console.log("key up");
+		switch(evt.keyCode){
+			case 37:
+				this.player.force.SetZero();
+			break;
+			case 38:
+			break;
+			case 39:
+				this.player.force.SetZero();
+			break;
+			case 40:
+			break;
+		}
+	};
+
+	/*
+	
+	*/
+	p.mouseDownHandler = function(evt){
+		var x = evt.x - rootCanvas.offsetLeft;
+		var y = evt.y - rootCanvas.offsetTop;
+
+		var vec = new Vec2(x, y);
+		// transform the canvas click position to the camera position
+		stage.camera.matrix.invert().transform(vec);
+
+		b2BodyFactory.create(vec.x, vec.y);
 	};
 
 	/*

@@ -15,6 +15,8 @@ Player
 	*/
 	p.init = function(){
 		this.GameObject_init();
+
+		this.force = new b2Vec2();
 		
 		var spriteSheet = new SpriteSheet();
 		spriteSheet.load(DataStore.player);
@@ -24,18 +26,22 @@ Player
 
 		this.y = -200;
 
-		this.bodyDef = new b2BodyDef();
-		this.bodyDef.type = b2Body.b2_dynamicBody;
+		var bodyDef = new b2BodyDef();
+		bodyDef.type = b2Body.b2_dynamicBody;
+		bodyDef.allowSleep = false;
 
 		var fixDef = new b2FixtureDef();
 		fixDef.density = 1.0;
-		fixDef.friction = 0.5;
-		fixDef.restitution = 0.2;
+		fixDef.friction = 0.2;
+		fixDef.restitution = 0;
 		fixDef.shape = new b2PolygonShape();
         fixDef.shape.SetAsBox(19/2/SCALE, 43/2/SCALE);
-        this.bodyDef.position.x = this.x;
-		this.bodyDef.position.y = this.y/SCALE;
-		this.playerBody = world.CreateBody(this.bodyDef).CreateFixture(fixDef);
+        bodyDef.position.x = this.x;
+		bodyDef.position.y = this.y/SCALE;
+		bodyDef.fixedRotation = true;
+
+		this.body = world.CreateBody(bodyDef);
+		this.body.CreateFixture(fixDef);
 	};
 
 	/*
@@ -43,10 +49,30 @@ Player
 	*/
 	p.update = function(){
 		// update graphics in order to follows physics engine
-		var vec = this.playerBody.m_body.GetPosition();
+		var vec = this.body.GetPosition();
 		this.animation.x = vec.x * SCALE;
 		this.animation.y = vec.y * SCALE;
-		// console.log(this.bodyDef.position.x, this.bodyDef.position.y)
+		// console.log(this.body)
+
+		// apply force
+		this.body.ApplyForce(this.force, this.body.GetPosition());
+
+		var velocity = this.body.GetLinearVelocity();
+		// restrict velocity
+		if(velocity.x > 3){
+			velocity.x = 3;
+		}
+		else if(velocity.x< -3){
+			velocity.x = -3;
+		}
+		this.body.SetLinearVelocity(velocity);
+	};
+
+	/*
+	
+	*/
+	p.jump = function(){
+		this.body.ApplyImpulse(new b2Vec2(0, -5), new b2Vec2(this.body.x, this.body.y));
 	};
 
 	window.Player = Player;

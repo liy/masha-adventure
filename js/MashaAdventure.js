@@ -31,14 +31,15 @@ window.onload = function(){
 	};
 
 	p.mainloop = function() {
-		// stats.begin();
+		stats.begin();
+		
 		if(this.currentScene != null)
 			this.currentScene.update();
 
 		requestAnimFrame(bind(this, this.mainloop));
 		stage.draw();
 
-		// stats.end();
+		stats.end();
 	};
 
 
@@ -50,6 +51,8 @@ window.onload = function(){
 	// box2d shortcuts:
 	this.b2Vec2 = Box2D.Common.Math.b2Vec2;
 	this.b2BodyDef = Box2D.Dynamics.b2BodyDef;
+	this.b2PolygonDef = Box2D.Dynamics.b2PolygonDef;
+	this.b2CircleDef = Box2D.Dynamics.b2CircleDef;
 	this.b2Body = Box2D.Dynamics.b2Body;
 	this.b2FixtureDef = Box2D.Dynamics.b2FixtureDef;
 	this.b2Fixture = Box2D.Dynamics.b2Fixture;
