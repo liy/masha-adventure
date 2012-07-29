@@ -11,7 +11,7 @@ Player
 
 	Player.MOVE_LEFT = 'left';
 	Player.MOVE_RIGHT = 'right';
-	Player.MOVE_STOP = 'stop';
+	Player.MOVE_STOP = 'stop'; 
 
 	p.GameObject_init = p.init;
 	/*
@@ -21,6 +21,8 @@ Player
 		this.GameObject_init();
 
 		this.moveState = Player.MOVE_STOP;
+
+		this.jumping = false;
 
 		this.desiredVel = 5;
 
@@ -40,10 +42,12 @@ Player
 
 		var fixDef = new b2FixtureDef();
 		fixDef.density = 1.0;
-		fixDef.friction = 0.2;
+		fixDef.friction = 0.0;
 		fixDef.restitution = 0;
 		fixDef.shape = new b2PolygonShape();
         fixDef.shape.SetAsBox(19/2/SCALE, 43/2/SCALE);
+        fixDef.filter.categoryBits = b2BodyFactory.type.player;
+        fixDef.filter.maskBits = ~b2BodyFactory.type.player;
         bodyDef.position.x = this.x;
 		bodyDef.position.y = this.y/SCALE;
 		bodyDef.fixedRotation = true;
@@ -63,21 +67,20 @@ Player
 		// console.log(this.body)
 
 		var vel = this.body.GetLinearVelocity();
+		var deltaVel;
 		switch(this.moveState){
 			case Player.MOVE_RIGHT:
-				// this.desiredVel = 5;
-				this.desiredVel = Math.min(vel.x + 0.1, 5);
+				deltaVel = (8 - vel.x)*0.08;
+				console.log(vel.y);
 			break;
 			case Player.MOVE_LEFT:
-				// this.desiredVel = -5;
-				this.desiredVel = Math.max(vel.x - 0.1, -5);
+				deltaVel = (-8 - vel.x)*0.08;
 			break;
 			case Player.MOVE_STOP:
 				// this.desiredVel = 0;
-				this.desiredVel *= 0.9;
+				deltaVel = (0 - vel.x)*0.08;
 			break;
 		}
-		var deltaVel = this.desiredVel - vel.x;
 		//disregard time factor
 		var impulse = this.body.GetMass() * deltaVel;
 		this.body.ApplyImpulse(new b2Vec2(impulse, 0), this.body.GetWorldCenter());
@@ -87,7 +90,12 @@ Player
 	
 	*/
 	p.jump = function(){
+		this.jumping = true;
 		this.body.ApplyImpulse(new b2Vec2(0, -5), new b2Vec2(this.body.x, this.body.y));
+	};
+
+	p._landed = function(){
+		this.jumping = false;
 	};
 
 	window.Player = Player;

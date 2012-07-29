@@ -17,13 +17,16 @@ GameScene
 	p.init = function(){
 		this.Scene_init();
 
+		var collide = ((0x0001 & 0x0001) !== 0);
+		console.log(collide);
+
 		window.world = new b2World(new b2Vec2(0, 10), true);
 
 		// box2d debug draw
 		this.debugDraw = new b2DebugDraw();
 		this.debugDraw.SetSprite(rootCanvas.getContext('2d'));
 		this.debugDraw.SetDrawScale(SCALE);
-		this.debugDraw.SetFillAlpha(1);
+		this.debugDraw.SetFillAlpha(0.2);
 		this.debugDraw.SetLineThickness(1.0);
 		this.debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
 		world.SetDebugDraw(this.debugDraw);
@@ -33,23 +36,26 @@ GameScene
 		fixDef.density = 1.0;
 		fixDef.friction = 0.2;
 		fixDef.restitution = 0;
+		fixDef.filter.categoryBits = b2BodyFactory.type.ground;
+		fixDef.filter.maskBits = -1; // collide with anything
 
 		var bodyDef = new b2BodyDef();
 		bodyDef.type = b2Body.b2_staticBody;
-		// positions the center of the object (not upper left!)
 		bodyDef.position.x = 0;
 		bodyDef.position.y = 0;
-
 		fixDef.shape = new b2PolygonShape();
 		fixDef.shape.SetAsBox((600 / SCALE) / 2, (20/SCALE) / 2);
 		world.CreateBody(bodyDef).CreateFixture(fixDef);
 
 
+		// wall
+		fixDef.filter.categoryBits = b2BodyFactory.type.wall;
+		fixDef.filter.maskBits = -1; // collide with anything
 		bodyDef.position.x = 100/SCALE;
 		bodyDef.position.y = -100/SCALE;
 		fixDef.shape = new b2PolygonShape();
 		fixDef.shape.SetAsBox((30 / SCALE) / 2, (200/SCALE) / 2);
-		world.CreateBody(bodyDef).CreateFixture(fixDef);	
+		world.CreateBody(bodyDef).CreateFixture(fixDef);
 
 
 
@@ -109,7 +115,7 @@ GameScene
 	
 	*/
 	p.keyDownHandler = function(evt){
-		console.log('key down');
+		// console.log('key down');
 
 		// testing vec
 		var force = new b2Vec2();
@@ -141,7 +147,7 @@ GameScene
 
 	*/
 	p.keyUpHandler = function(evt){
-		console.log("key up");
+		// console.log("key up");
 		switch(evt.keyCode){
 			case 37:
 				this.player.moveState = Player.MOVE_STOP;
