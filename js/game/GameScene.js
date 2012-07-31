@@ -31,6 +31,9 @@ GameScene
 		this.debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
 		world.SetDebugDraw(this.debugDraw);
 
+		// add listener
+		world.SetContactListener(new ContactListener());
+
 		// ground
 		var fixDef = new b2FixtureDef();
 		fixDef.density = 1.0;
@@ -109,6 +112,8 @@ GameScene
 	*/
 	p.switchUpHandler = function(){
 		this.paused = true;
+
+		this.player.stopJump();
 	};
 
 	/*
