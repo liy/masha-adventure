@@ -32,7 +32,7 @@ GameScene
 		world.SetDebugDraw(this.debugDraw);
 
 		// add listener
-		world.SetContactListener(new ContactListener());
+		contactMediator.init(world);
 
 		// ground
 		var fixDef = new b2FixtureDef();

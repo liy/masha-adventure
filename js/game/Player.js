@@ -45,34 +45,46 @@ Player
 		bodyDef.allowSleep = false;
 
 		// body
-		var fixDef = new b2FixtureDef();
-		fixDef.density = 1.0;
-		fixDef.friction = 0.0;
-		fixDef.restitution = 0;
-		fixDef.shape = new b2PolygonShape();
-        fixDef.shape.SetAsBox(19/2/SCALE, 43/2/SCALE);
-        fixDef.filter.categoryBits = b2BodyFactory.type.player;
-        fixDef.filter.maskBits = ~b2BodyFactory.type.player;
-        fixDef.filter.groupIndex = -1;
+		var bodyFixDef = new b2FixtureDef();
+		bodyFixDef.density = 1.0;
+		bodyFixDef.friction = 0.0;
+		bodyFixDef.restitution = 0;
+		bodyFixDef.shape = new b2PolygonShape();
+        bodyFixDef.shape.SetAsBox(19/2/SCALE, 43/2/SCALE);
+        bodyFixDef.filter.categoryBits = b2BodyFactory.type.player;
+        bodyFixDef.filter.maskBits = ~b2BodyFactory.type.player;
+        bodyFixDef.filter.groupIndex = -1;
         bodyDef.position.x = this.x;
 		bodyDef.position.y = this.y/SCALE;
 		bodyDef.fixedRotation = true;
 
 		// foot sensor
-		var sensorFix = new b2FixtureDef();
-		sensorFix.shape = new b2PolygonShape();
-		sensorFix.isSensor = true;
-		sensorFix.shape.SetAsOrientedBox(4/30, 4/30, new b2Vec2(0, 21.5/30), 0);
-		// sensorFix.shape = new b2CircleShape();
-		// sensorFix.shape.SetRadius(1/30);
-		// sensorFix.shape.SetLocalPosition(new b2Vec2(0,21.5/30));
+		var sensorFixDef = new b2FixtureDef();
+		sensorFixDef.shape = new b2PolygonShape();
+		sensorFixDef.isSensor = true;
+		sensorFixDef.shape.SetAsOrientedBox(4/SCALE, 4/SCALE, new b2Vec2(0, 21.5/SCALE), 0);
 
 		this.body = world.CreateBody(bodyDef);
-		this.body.CreateFixture(fixDef);
-		this.body.CreateFixture(sensorFix).SetUserData({
-			target: this,
-			type: 'footSensor'
-		});
+		this.body.CreateFixture(bodyFixDef);
+		var sensorFix = this.body.CreateFixture(sensorFixDef);
+
+		// Set the foot sensor contact listener.
+		sensorFix.BeginContact = bind(this, this.sensorBeginContact);
+		sensorFix.EndContact = bind(this, this.sensorEndContact);
+	};
+
+	/*
+	
+	*/
+	p.sensorBeginContact = function(contact){
+		++this.numFootContacts;
+	};
+
+	/*
+	
+	*/
+	p.sensorEndContact = function(contact){
+		--this.numFootContacts;
 	};
 
 	/*
@@ -111,12 +123,11 @@ Player
 	
 	*/
 	p.jump = function(){
-		if(!this.canJump){
+		if(this.canJump){
 			var vel = this.body.GetLinearVelocity();
 			deltaVel = (-1 - vel.y);
 			this.impulse.y = this.body.GetMass() * deltaVel;
 
-			console.log('jump: ' + this.numFootContacts);
 			// only apply jump impulse for a few second.
 			this.jumpTimeoutID = setTimeout(bind(this, function(){
 				this.impulse.y = 0;
@@ -137,7 +148,7 @@ Player
 	*/
 	Object.defineProperty(p, "canJump", {
 		get: function(){
-			return this.numFootContacts <= 0;
+			return this.numFootContacts > 0;
 		}
 	});
 

@@ -2,12 +2,15 @@
 	function GameObject(){
 		this.init();
 	}
-	var p = GameObject.prototype;
+	var p = GameObject.prototype = new EventDispatcher();
 
+	p.EventDispatcher_init = p.init;
 	/*
 	
 	*/
 	p.init = function(){
+		this.EventDispatcher_init();
+
 		this._x = 0;
 		this._y = 0;
 	};
