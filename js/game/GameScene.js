@@ -17,10 +17,7 @@ GameScene
 	p.init = function(){
 		this.Scene_init();
 
-		var collide = ((0x0001 & 0x0001) !== 0);
-		console.log(collide);
-
-		window.world = new b2World(new b2Vec2(0, 10), true);
+		window.world = new b2World(new b2Vec2(0, 25), true);
 
 		// box2d debug draw
 		this.debugDraw = new b2DebugDraw();
@@ -31,7 +28,9 @@ GameScene
 		this.debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
 		world.SetDebugDraw(this.debugDraw);
 
-		// add listener
+		// add contact mediator.
+		// All the contact event will be mediated to the proper Fixture, if the fixture has the corresponding handler for
+		// the contact event.
 		contactMediator.init(world);
 
 		// ground
@@ -50,17 +49,14 @@ GameScene
 		fixDef.shape.SetAsBox((600 / SCALE) / 2, (20/SCALE) / 2);
 		world.CreateBody(bodyDef).CreateFixture(fixDef);
 
-
 		// wall
-		fixDef.filter.categoryBits = b2BodyFactory.type.wall;
-		fixDef.filter.maskBits = -1; // collide with anything
-		bodyDef.position.x = 100/SCALE;
-		bodyDef.position.y = -100/SCALE;
-		fixDef.shape = new b2PolygonShape();
-		fixDef.shape.SetAsBox((30 / SCALE) / 2, (200/SCALE) / 2);
-		world.CreateBody(bodyDef).CreateFixture(fixDef);
-
-
+		// fixDef.filter.categoryBits = b2BodyFactory.type.wall;
+		// fixDef.filter.maskBits = -1; // collide with anything
+		// bodyDef.position.x = 100/SCALE;
+		// bodyDef.position.y = -100/SCALE;
+		// fixDef.shape = new b2PolygonShape();
+		// fixDef.shape.SetAsBox((30 / SCALE) / 2, (200/SCALE) / 2);
+		// world.CreateBody(bodyDef).CreateFixture(fixDef);
 
 		this.paused = true;
 

@@ -37,36 +37,27 @@ b2BodyFactory
 		fixDef.restitution = 0.2;
 
 		var ran = Math.floor(Math.random() * 4);
-		// if(ran === 0){
-		if(false){
+		if(ran === 0){
+		// if(false){
 			// square
 			fixDef.shape = new b2PolygonShape();
 			fixDef.shape.SetAsBox(0.52, 0.52);
-			fixDef.filter.categoryBits = b2BodyFactory.type.square;
-			fixDef.filter.maskBits = b2BodyFactory.type.square | b2BodyFactory.type.ground;
 		}
-		// else if(ran === 1){
-		else if(false){
+		else if(ran === 1){
+		// else if(false){
 			// rectangle
 			fixDef.shape = new b2PolygonShape();
 			fixDef.shape.SetAsBox(1, 0.4);
-			fixDef.filter.categoryBits = b2BodyFactory.type.rectangle;
-			fixDef.filter.maskBits = b2BodyFactory.type.rectangle | b2BodyFactory.type.ground;
 		}
-		// else if(ran === 2){
-		else if(false){
+		else if(ran === 2){
+		// else if(false){
 			// triangle
 			fixDef.shape = new b2PolygonShape();
 			fixDef.shape.SetAsArray(new Array(new b2Vec2(0, -1), new b2Vec2(1, 1), new b2Vec2(-1, 1)) , 3);
-			fixDef.filter.categoryBits = b2BodyFactory.type.triangle;
-			fixDef.filter.maskBits = b2BodyFactory.type.triangle | b2BodyFactory.type.ground;
 		}
 		else{
 			fixDef.shape = new b2CircleShape();
 			fixDef.shape.SetRadius(1);
-			fixDef.filter.categoryBits = b2BodyFactory.type.circle;
-			fixDef.filter.maskBits = b2BodyFactory.type.circle | b2BodyFactory.type.ground | b2BodyFactory.type.wall | b2BodyFactory.type.player;
-			fixDef.filter.groupIndex = -1; // override collide with player
 
 			// create circle sensor for circle shape
 			var sensorFix = new b2FixtureDef();
