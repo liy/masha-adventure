@@ -34,7 +34,6 @@
 			return this._x;
 		},
 		set: function(x){
-			this.animation.x = x;
 			this._x = x;
 		}
 	});
@@ -44,7 +43,6 @@
 			return this._y;
 		},
 		set: function(y){
-			this.animation.y = y;
 			this._y = y;
 		}
 	});

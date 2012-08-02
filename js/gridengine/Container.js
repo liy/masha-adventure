@@ -64,7 +64,7 @@
 	Remove a DisplayObject from the Container.
 	*/
 	p.removeChild = function(displayObject){
-		removeChildAt(this._children.indexOf(displayObject));
+		this.removeChildAt(this._children.indexOf(displayObject));
 	};
 
 	/*
@@ -75,7 +75,8 @@
 			return null;
 
 		var removed = this._children[index];
-		delete this._children[index];
+		// delete this._children[index];
+		this._children.splice(index, 1);
 		removed.parent = null;
 		
 		// it is now off the stage.
@@ -85,6 +86,16 @@
 		this.dirtyAABB = true;
 
 		return removed;
+	};
+
+	/*
+	
+	*/
+	p.getChildAt = function(index){
+		if(index < 0 || index > this._children.length-1)
+			return null;
+
+		return this._children[index];
 	};
 
 	/*

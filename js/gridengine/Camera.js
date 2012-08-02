@@ -144,25 +144,25 @@
 
 	Object.defineProperty(p, "right", {
 		get: function(){
-			return this.position.x + this.width * (1-this.anhorRatioX);
+			return this.position.x + this.width * (1-this.anchorRatioX);
 		}
 	});
 
 	Object.defineProperty(p, "left", {
 		get: function(){
-			return this.position.x - this.width * this.anhorRatioX;
+			return this.position.x - this.width * this.anchorRatioX;
 		}
 	});
 	
 	Object.defineProperty(p, "top", {
 		get: function(){
-			return this.position.y - this.height * this.anhorRatioY;
+			return this.position.y - this.height * this.anchorRatioY;
 		}
 	});
 
 	Object.defineProperty(p, "bottom", {
 		get: function(){
-			return this.position.y + this.height * (1-this.anhorRatioY);
+			return this.position.y + this.height * (1-this.anchorRatioY);
 		}
 	});
 

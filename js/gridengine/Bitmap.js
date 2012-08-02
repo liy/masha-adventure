@@ -11,6 +11,8 @@
 		// the rectangle object define the area of the object, e.g., the image width and height
 		this._rect = new Rect();
 
+		this.complete = false;
+
 		if(typeof src == 'string'){
 			this.image = new Image();
 			this.image.onload = bind(this, function(){
@@ -18,6 +20,8 @@
 				this._rect.height = this.image.height;
 
 				this._aabb.reset(this._rect);
+
+				this.complete = true;
 
 				this.dispatchEvent(new Event(Event.COMPLETE));
 			});
@@ -29,6 +33,8 @@
 			this._rect.height = this.image.height;
 
 			this._aabb.reset(this._rect);
+
+			this.complete = true;
 		}
 	};
 

@@ -36,7 +36,7 @@ Player
 		this.animation = new Animation(spriteSheet);
 		this.animation.anchorX = 19;
 		this.animation.anchorY = 21;
-		this.animation.alpha = 0.2;
+		// this.animation.alpha = 0.2;
 		this.animation.gotoAndPlay('run');
 
 		this.y = -200;
@@ -173,8 +173,8 @@ Player
 	*/
 	Object.defineProperty(p, "canJump", {
 		get: function(){
-			// return this.numFootContacts > 0;
-			return true;
+			return this.numFootContacts > 0;
+			// return true;
 		}
 	});
 

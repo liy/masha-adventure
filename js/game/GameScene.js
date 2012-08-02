@@ -17,7 +17,13 @@ GameScene
 	p.init = function(){
 		this.Scene_init();
 
+		this.toBeDestroyedGameObjects = [];
+
 		this._gameObjects = [];
+
+		this.buildingContainer = new Container();
+		this.addChild(this.buildingContainer);
+		this._buildingGenerator = new BuildingGenerator(this);
 
 		window.world = new b2World(new b2Vec2(0, 25), true);
 
@@ -91,7 +97,8 @@ GameScene
 		stage.camera.x = this.player.x;
 		stage.camera.y = this.player.y;
 
-		// TODO: check the object is outside of the camera or not, destroy it if it is
+		// generate new building
+		this._buildingGenerator.process();
 	};
 
 	p.Scene_draw = p.draw;
