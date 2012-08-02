@@ -17,6 +17,8 @@ GameScene
 	p.init = function(){
 		this.Scene_init();
 
+		this._gameObjects = [];
+
 		window.world = new b2World(new b2Vec2(0, 25), true);
 
 		// box2d debug draw
@@ -33,31 +35,6 @@ GameScene
 		// the contact event.
 		contactMediator.init(world);
 
-		// ground
-		var fixDef = new b2FixtureDef();
-		fixDef.density = 1.0;
-		fixDef.friction = 0.2;
-		fixDef.restitution = 0;
-		fixDef.filter.categoryBits = b2BodyFactory.type.ground;
-		fixDef.filter.maskBits = -1; // collide with anything
-
-		var bodyDef = new b2BodyDef();
-		bodyDef.type = b2Body.b2_staticBody;
-		bodyDef.position.x = 0;
-		bodyDef.position.y = 0;
-		fixDef.shape = new b2PolygonShape();
-		fixDef.shape.SetAsBox((600 / SCALE) / 2, (20/SCALE) / 2);
-		world.CreateBody(bodyDef).CreateFixture(fixDef);
-
-		// wall
-		// fixDef.filter.categoryBits = b2BodyFactory.type.wall;
-		// fixDef.filter.maskBits = -1; // collide with anything
-		// bodyDef.position.x = 100/SCALE;
-		// bodyDef.position.y = -100/SCALE;
-		// fixDef.shape = new b2PolygonShape();
-		// fixDef.shape.SetAsBox((30 / SCALE) / 2, (200/SCALE) / 2);
-		// world.CreateBody(bodyDef).CreateFixture(fixDef);
-
 		this.paused = true;
 
 		switches.addListener('switch press', bind(this, this.switchDownHandler));
@@ -66,23 +43,55 @@ GameScene
 		document.addEventListener("keydown", bind(this, this.keyDownHandler), false);
 		document.addEventListener("keyup", bind(this, this.keyUpHandler), false);
 
+		// ground
+		var tx = 0;
+		for(var i=0; i<100; ++i){
+			var ground = new Ground();
+			this.addGameObject(ground);
+			ground.x = tx/SCALE;
+
+			tx += ground.length;
+		}
+
 		this.player = new Player();
-		this.player.animation.gotoAndPlay('run');
 		this.addChild(this.player.animation);
+
+		this.addGameObject(this.player);
+	};
+
+	/*
+	
+	*/
+	p.addGameObject = function(go){
+		this._gameObjects.push(go);
+	};
+
+	p.removeGameObject = function(go){
+		for(var i=0; i<this._gameObjects.length; ++i){
+			if(this._gameObjects[i] == go)
+				delete this._gameObjects[i];
+		}
 	};
 
 	/*
 	
 	*/
 	p.update = function(){
-		// console.log('update')
+		// advance the physics.
 		world.Step(1/60, 10, 10);
 		world.ClearForces();
 
-		this.player.update();
+		// update the animation.
+		for(var i=0; i<this._gameObjects.length; ++i){
+			if(this._gameObjects[i].update)
+				this._gameObjects[i].update();
+		}
 
-		stage.camera.x = this.player.animation.x;
-		stage.camera.y = this.player.animation.y;
+		// camera follows player
+		stage.camera.x = this.player.x;
+		stage.camera.y = this.player.y;
+
+		// TODO: check the object is outside of the camera or not, destroy it if it is
 	};
 
 	p.Scene_draw = p.draw;
@@ -90,7 +99,10 @@ GameScene
 	
 	*/
 	p.draw = function(ctx){
+		// draw box2d debug graphcis.
 		world.DrawDebugData();
+
+		// draw all the graphics.
 		this.Scene_draw(ctx);
 	};
 

@@ -7,14 +7,14 @@ Building
 	function Building(){
 		this.init();
 	}
-	var p = Building.prototype = new Container();
+	var p = Building.prototype = new GameObject();
 
-	p.Container_init = p.init;
+	p.GameObject_init = p.init;
 	/*
 	
 	*/
 	p.init = function(){
-		this.Container_init();
+		this.GameObject_init();
 
 		var bmp = new Bitmap('img/buildings/building-1.png');
 		this.addChild(bmp);

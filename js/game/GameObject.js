@@ -22,6 +22,13 @@
 		// TODO update the game object position
 	};
 
+	/*
+	
+	*/
+	p.draw = function(){
+		
+	};
+
 	Object.defineProperty(p, "x", {
 		get: function(){
 			return this._x;

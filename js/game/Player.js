@@ -37,6 +37,7 @@ Player
 		this.animation.anchorX = 19;
 		this.animation.anchorY = 21;
 		this.animation.alpha = 0.2;
+		this.animation.gotoAndPlay('run');
 
 		this.y = -200;
 
@@ -180,6 +181,24 @@ Player
 	p._landed = function(){
 		this.jumping = false;
 	};
+
+	Object.defineProperty(p, "x", {
+		get: function(){
+			return this.animation.x;
+		},
+		set: function(x){
+			this.animation.x = x;
+		}
+	});
+
+	Object.defineProperty(p, "y", {
+		get: function(){
+			return this.animation.y;
+		},
+		set: function(y){
+			this.animation.y = y;
+		}
+	});
 
 	window.Player = Player;
 }(window));
