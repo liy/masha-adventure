@@ -16,7 +16,7 @@ Building
 	p.init = function(){
 		this.GameObject_init();
 
-		this.bitmap = new Bitmap('img/buildings/building-1.png');
+		this.bitmap = new Bitmap('img/buildings/building-'+(Math.floor(Math.random()*9)+1)+'.png');
 		this.bitmap.gameObject = this;
 		this.bitmap.addListener(Event.COMPLETE, bind(this, this.loadedHandler));
 	};
@@ -44,7 +44,6 @@ Building
 		// body definition
 		var bodyDef = new b2BodyDef();
 		bodyDef.type = b2Body.b2_dynamicBody;
-		bodyDef.allowSleep = false;
 		bodyDef.position.x = this.x/SCALE;
 		bodyDef.position.y = this.y/SCALE;
 		bodyDef.fixedRotation = true;

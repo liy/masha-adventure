@@ -31,7 +31,7 @@ BuildingGenerator
 	p.process = function(){
 		if(this.currentBuilding.bitmap.complete && this.trackX < stage.camera.right){
 			// console.log('deploy');
-			this.trackX += this.currentBuilding.bitmap.width + 2;
+			this.trackX += this.currentBuilding.bitmap.width + 10;
 			this.currentBuilding = this.deploy();
 		}
 	};
