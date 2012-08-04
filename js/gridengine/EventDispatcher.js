@@ -23,11 +23,10 @@ EventDispatcher
 		this._listeners.push(listener);
 	};
 	
-	// FIXME
 	p.removeListener = function(type, func){
 		for(var i in this._listeners){
-			if(this._listeners[i].type == type && func.toString() == this._listeners[i].func.toString()){
-				// delete this._listeners[i];
+			// TODO: the function comparison needs more work, it
+			if(this._listeners[i].type === type && func.toString() === this._listeners[i].func.toString()){
 				this._listeners.splice(i, 1);
 				return;
 			}

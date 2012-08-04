@@ -20,7 +20,6 @@ Building
 		// this.bitmap = new Bitmap('img/buildings/building-2.png');
 		this.bitmap.gameObject = this;
 		this.bitmap.addListener(Event.COMPLETE, bind(this, this.loadedHandler));
-		// this.bitmap.addListener(Event.COMPLETE, this.loadedHandler);
 	};
 
 	/*
@@ -38,8 +37,9 @@ Building
 	
 	*/
 	p.loadedHandler = function(e){
-		// FIXME: remove a bounded listener!
-		this.bitmap.removeListener(Event.COMPLETE, this.loadedHandler);
+		console.log('loaded: ' + this.bitmap._listeners.length);
+		this.bitmap.removeListener(Event.COMPLETE, bind(this, this.loadedHandler));
+		console.log(this.bitmap._listeners.length);
 
 		// body definition
 		var bodyDef = new b2BodyDef();

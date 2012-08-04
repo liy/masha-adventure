@@ -91,7 +91,7 @@ Player
 	
 	*/
 	p.sensorBeginContact = function(contact){
-		console.log('BeginContact');
+		// console.log('BeginContact');
 		++this.numFootContacts;
 	};
 
