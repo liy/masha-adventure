@@ -6,7 +6,7 @@ BuildingGenerator
 (function(window){
 	function BuildingGenerator(gameScene){
 		this.gameScene = gameScene;
-		this.trackX = -400;
+		this.trackX = 0;
 
 		this.currentBuilding = this.deploy();
 	}
@@ -32,6 +32,7 @@ BuildingGenerator
 		if(this.currentBuilding.bitmap.complete && this.trackX < stage.camera.right){
 			// console.log('deploy');
 			this.trackX += this.currentBuilding.bitmap.width + 10;
+			console.log(this.currentBuilding.bitmap.width);
 			this.currentBuilding = this.deploy();
 		}
 	};

@@ -16,9 +16,11 @@ Building
 	p.init = function(){
 		this.GameObject_init();
 
-		this.bitmap = new Bitmap('img/buildings/building-'+(Math.floor(Math.random()*9)+1)+'.png');
+		this.bitmap = new Bitmap('img/buildings/building-'+(Math.floor(Math.random()*26)+1)+'.png');
+		// this.bitmap = new Bitmap('img/buildings/building-2.png');
 		this.bitmap.gameObject = this;
 		this.bitmap.addListener(Event.COMPLETE, bind(this, this.loadedHandler));
+		// this.bitmap.addListener(Event.COMPLETE, this.loadedHandler);
 	};
 
 	/*
@@ -36,21 +38,18 @@ Building
 	
 	*/
 	p.loadedHandler = function(e){
-		this.bitmap.removeListener(Event.COMPLETE, bind(this, this.loadedHandler));
-
-		this.bitmap.anchorX = this.bitmap.width/2;
-		this.bitmap.anchorY = this.bitmap.height/2;
+		// FIXME: remove a bounded listener!
+		this.bitmap.removeListener(Event.COMPLETE, this.loadedHandler);
 
 		// body definition
 		var bodyDef = new b2BodyDef();
 		bodyDef.type = b2Body.b2_dynamicBody;
-		bodyDef.position.x = this.x/SCALE;
-		bodyDef.position.y = this.y/SCALE;
+		bodyDef.position.x = (this.x + this.bitmap.width/2)/SCALE;
+		bodyDef.position.y = (this.y - this.bitmap.height/2)/SCALE;
 		bodyDef.fixedRotation = true;
 
 		// create body.
 		this.body = world.CreateBody(bodyDef);
-
 
 		// create body fixture definition
 		var bodyRectFixDef = new b2FixtureDef();
@@ -61,6 +60,11 @@ Building
 		bodyRectFixDef.shape.SetAsBox(this.bitmap.width/2/SCALE, this.bitmap.height/2/SCALE);
 		bodyRectFixDef.filter.maskBits = ~b2BodyFactory.type.player;
 		this.body.CreateFixture(bodyRectFixDef);
+
+		// offset the bitmap, so it match the body position
+		this.bitmap.anchorX = this.bitmap.width/2;
+		this.bitmap.anchorY = this.bitmap.height/2;
+
 	};
 
 	/*
