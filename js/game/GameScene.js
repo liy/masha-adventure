@@ -17,15 +17,16 @@ GameScene
 	p.init = function(){
 		this.Scene_init();
 
-		this.toBeDestroyedGameObjects = [];
-
-		this._gameObjects = [];
-
-		this.buildingContainer = new Container();
-		this.addChild(this.buildingContainer);
-		this._buildingGenerator = new BuildingGenerator(this);
-
+		// create box2d world for handling physics
 		window.world = new b2World(new b2Vec2(0, 25), true);
+
+		// manage the building creation and destroy.
+		this.buildingManager = new BuildingManager();
+		this.buildingManager.init(this);
+
+		// manage the creation and destroy.
+		this.groundManager = new GroundManager();
+		this.groundManager.init(this);
 
 		// box2d debug draw
 		this.debugDraw = new b2DebugDraw();
@@ -49,34 +50,9 @@ GameScene
 		document.addEventListener("keydown", bind(this, this.keyDownHandler), false);
 		document.addEventListener("keyup", bind(this, this.keyUpHandler), false);
 
-		// ground
-		var tx = 0;
-		for(var i=0; i<100; ++i){
-			var ground = new Ground();
-			this.addGameObject(ground);
-			ground.x = tx/SCALE;
-
-			tx += ground.length;
-		}
-
+		// do I need a manager for player?
 		this.player = new Player();
 		this.addChild(this.player.animation);
-
-		this.addGameObject(this.player);
-	};
-
-	/*
-	
-	*/
-	p.addGameObject = function(go){
-		this._gameObjects.push(go);
-	};
-
-	p.removeGameObject = function(go){
-		for(var i=0; i<this._gameObjects.length; ++i){
-			if(this._gameObjects[i] == go)
-				delete this._gameObjects[i];
-		}
 	};
 
 	/*
@@ -87,18 +63,18 @@ GameScene
 		world.Step(1/60, 10, 10);
 		world.ClearForces();
 
-		// update the animation.
-		for(var i=0; i<this._gameObjects.length; ++i){
-			if(this._gameObjects[i].update)
-				this._gameObjects[i].update();
-		}
+		// update the building
+		this.buildingManager.update();
+
+		// update the player.
+		this.player.update();
 
 		// camera follows player
 		stage.camera.x = this.player.x;
 		stage.camera.y = this.player.y;
 
-		// generate new building
-		this._buildingGenerator.process();
+		// generate new building, and remove any game object outside of the camera.
+		this.buildingManager.process();
 	};
 
 	p.Scene_draw = p.draw;

@@ -18,14 +18,15 @@ TitleScene
 
 		this.addListener('scene.fadeIn.complete', this.fadeInCompleteHandler);
 
-		var paw = new Bitmap('img/paw.png');
+		var paw = new Bitmap();
 		paw.alpha = 0.5;
 		this.addChild(paw);
+		paw.load('image/paw.png');
 
-		var bmp = new Bitmap('img/texture.png');
+		var bmp = new Bitmap();
 		bmp.alpha = 1;
 		this.addChild(bmp);
-
+		bmp.load('img/texture.png');
 
 	};
 

@@ -16,9 +16,9 @@ Building
 	p.init = function(){
 		this.GameObject_init();
 
-		this.bitmap = new Bitmap('img/buildings/building-'+(Math.floor(Math.random()*26)+1)+'.png');
+		this.bitmap = new Bitmap();
+		// this.bitmap = new Bitmap('img/buildings/building-'+(Math.floor(Math.random()*26)+1)+'.png');
 		// this.bitmap = new Bitmap('img/buildings/building-2.png');
-		this.bitmap.gameObject = this;
 		this.bitmap.addListener(Event.COMPLETE, bind(this, this.loadedHandler));
 	};
 
@@ -26,20 +26,24 @@ Building
 	
 	*/
 	p.destroy = function(){
-		console.log('destroy: ' + this.bitmap.gameObject);
-		this.bitmap.gameObject = null;
 		this.bitmap.parent.removeChild(this.bitmap);
-
 		world.DestroyBody(this.body);
 	};
 
 	/*
 	
 	*/
+	p.load = function(imageOrURL){
+		this.bitmap.load(imageOrURL);
+	};
+
+	/*
+	
+	*/
 	p.loadedHandler = function(e){
-		console.log('loaded: ' + this.bitmap._listeners.length);
+		console.log('building complete');
+
 		this.bitmap.removeListener(Event.COMPLETE, bind(this, this.loadedHandler));
-		console.log(this.bitmap._listeners.length);
 
 		// body definition
 		var bodyDef = new b2BodyDef();
@@ -78,6 +82,15 @@ Building
 			this.bitmap.y = vec.y * SCALE + 0.5|0;
 		}
 	};
+
+	/*
+	Getter and setter
+	*/
+	Object.defineProperty(p, "complete", {
+		get: function(){
+			return this.bitmap.complete;
+		}
+	});
 
 	/*
 	Getter and setter

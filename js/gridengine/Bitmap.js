@@ -1,41 +1,50 @@
 (function(window){
-	function Bitmap(src){
-		this.init(src);
+	function Bitmap(){
+		this.init();
 	}
 	var p = Bitmap.prototype = new DisplayObject();
 
 	p.DisplayObject_init = p.init;
-	p.init = function(src){
+	p.init = function(){
 		this.DisplayObject_init();
+
+		this.image = null;
 
 		// the rectangle object define the area of the object, e.g., the image width and height
 		this._rect = new Rect();
+	};
 
-		this.complete = false;
-
-		if(typeof src == 'string'){
+	/*
+	
+	*/
+	p.load = function(imageOrURL){
+		// url
+		if(typeof imageOrURL === 'string'){
 			this.image = new Image();
-			this.image.onload = bind(this, function(){
-				this._rect.width = this.image.width;
-				this._rect.height = this.image.height;
-
-				this._aabb.reset(this._rect);
-
-				this.complete = true;
-
-				this.dispatchEvent(new Event(Event.COMPLETE));
-			});
-			this.image.src = src;
+			this.image.onload = bind(this, this.onload);
+			this.image.src = imageOrURL;
 		}
 		else{
-			this.image = src;
-			this._rect.width = this.image.width;
-			this._rect.height = this.image.height;
+			this.image = imageOrURL;
 
-			this._aabb.reset(this._rect);
-
-			this.complete = true;
+			if(!this.image.complete)
+				this.image.onload = bind(this, this.onload);
+			else
+				this.onload();
 		}
+	};
+
+	/*
+	
+	*/
+	p.onload = function(){
+		console.log('bitmap loaded complete');
+		this._rect.width = this.image.width;
+		this._rect.height = this.image.height;
+
+		this._aabb.reset(this._rect);
+
+		this.dispatchEvent(new Event(Event.COMPLETE));
 	};
 
 	/*
@@ -80,6 +89,15 @@
 			}
 			// return the clone of the aabb.
 			return this._aabb;
+		}
+	});
+
+	/*
+	Getter and setter
+	*/
+	Object.defineProperty(p, "complete", {
+		get: function(){
+			return this.image.complete;
 		}
 	});
 
