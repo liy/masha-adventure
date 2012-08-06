@@ -67,8 +67,8 @@ window.onload = function(){
 	this.stats.setMode(0); // 0: fps, 1: ms
 	// Align top-left
 	this.stats.domElement.style.position = 'absolute';
-	this.stats.domElement.style.left = '800px';
-	this.stats.domElement.style.top = '0px';
+	this.stats.domElement.style.left = (rootCanvas.offsetLeft+rootCanvas.width)+"px";
+	this.stats.domElement.style.top = rootCanvas.offsetTop + 'px';
 	var rootDiv = document.getElementById('root-div');
 	rootDiv.appendChild(this.stats.domElement);
 
